@@ -2,7 +2,7 @@ import { Avatar, Box, Paper, Typography } from "@mui/material";
 import { blue, green } from "@mui/material/colors";
 import Markdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-
+import { vscDarkPlus} from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 
 
@@ -15,9 +15,40 @@ export default function Message(props: {
     <Paper>
       {msgType == "AI" ? (
         <Box display="flex" alignItems="center" gap="1em">
-          <Avatar sx={{ bgcolor: blue[500] }} variant="rounded">
+          <Avatar  sx={{ bgcolor: blue[500], alignSelf:"start"}} variant="rounded">
             AI
           </Avatar>
+          <Box padding="0 1em">
+          <Markdown
+            children={userMsg}
+            components={{
+              code(props) {
+                const { children, className, node, ...rest } = props;
+                const match = /language-(\w+)/.exec(className || "");
+                return match ? (
+                  <SyntaxHighlighter
+                    // {...rest}
+                    PreTag="div"
+                    children={String(children).replace(/\n$/, "")}
+                    language={match[1]}
+                    style={vscDarkPlus}
+                  />
+                ) : (
+                  <code {...rest} className={className}>
+                    {children}
+                  </code>
+                );
+              },
+            }}
+          />
+        </Box>
+        </Box>
+      ) : (
+        <Box display="flex" alignItems="center" gap="1em">
+          <Avatar sx={{ bgcolor: green[500], alignSelf:"start" }} variant="rounded">
+            H
+          </Avatar >
+          <Box padding="0 1em">
           <Markdown
             children={userMsg}
             components={{
@@ -41,12 +72,6 @@ export default function Message(props: {
             }}
           />
         </Box>
-      ) : (
-        <Box display="flex" alignItems="center" gap="1em">
-          <Avatar sx={{ bgcolor: green[500] }} variant="rounded">
-            H
-          </Avatar>
-          <Typography>{userMsg}</Typography>
         </Box>
       )}
     </Paper>

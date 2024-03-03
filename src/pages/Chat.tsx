@@ -1,119 +1,103 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import { Box, Button, Container } from "@mui/material";
+
+import { useRef, useState } from "react";
+import Sidebar from "../components/Sidebar";
 import theme from "../theme";
+import Message from "../components/Message";
+import UserInput from "../components/UserInput";
+import { Ollama } from "@langchain/community/llms/ollama";
 
-export default function Sidebar(props: any) {
-  const { open, handleClose, drawerWidth } = props;
+function Chat() {
+  const drawerWidth = 300;
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [isStreaming, setStreaming] = useState(false);
+  const [message, setMessage] = useState("");
+  const msgRef = useRef<any>()
+  const [messages, setMessages] = useState<any[]>([]);
 
-  const DrawerList = (
-    <Box>
-      <List>
-        {[
-          "Inbox",
-          "Starred",
-          "Send email",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-        ].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List
-        sx={{
-          position: "sticky",
-          bottom: 0,
-          background: theme.palette.background.default,
-        }}
-      >
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
+  function updateMessage(message: any) {
+    setMessages((prev) => {
+      return [...prev, message];
+    });
+  }
+
+  async function handleSubmit(querry: string) {
+    updateMessage({ type: "human", message: querry });
+    setStreaming(true);
+    const ollama = new Ollama({
+      baseUrl: "http://localhost:11434", // Default value
+      model: "tinyllama", // Default value
+    });
+
+    const stream = await ollama.stream(querry);
+    let mes = ''
+    for await (const chunk of stream) {
+      mes += chunk
+      setMessage(mes)
+      msgRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+    setStreaming(false);
+    updateMessage({ type: "AI", message: mes });
+    setMessage("")
+  }
+  // const drawerWidth = 240; // You can adjust the initial width of the drawer
+
+  function handleDrawerOpen() {
+    setDrawerOpen(true);
+  }
+
+  function handleDrawerClose() {
+    setDrawerOpen(false);
+  }
 
   return (
-    <div>
-      <Drawer
-        PaperProps={{ style: { width: drawerWidth } }}
-        variant="persistent"
-        open={open}
+    <>
+      <Box
+        height="100dvh"
+        position="relative"
+        style={{
+          marginLeft: isDrawerOpen ? drawerWidth : 0,
+          transition: "margin 0.3s",
+        }}
       >
+        {!isDrawerOpen && <Button onClick={handleDrawerOpen}>open</Button>}
+        <Sidebar
+          open={isDrawerOpen}
+          drawerWidth={drawerWidth}
+          handleClose={handleDrawerClose}
+        />
         <Box
-          sx={{
-            zIndex:9,
-            position: "sticky",
-            top: 0,
-            background: theme.palette.background.default,
-          }}
+          display="flex"
+          flexDirection="column"
+          justifyContent="space-between"
+          height="100%"
         >
-          <Button onClick={handleClose}>Open drawer</Button>
+          <Container>
+            <Box display="grid" gap="1em">
+              {messages.map((val, index) => (
+                <Message
+                  key={index}
+                  userMsg={val.message}
+                  msgType={val.type as "human" | "AI"}
+                />
+              ))}
+              {isStreaming && <Message userMsg={message} msgType={"AI"} />}
+              
+            </Box>
+            <Box ref={msgRef} ></Box>
+          </Container>
+          <Container
+            sx={{
+              position: "sticky",
+              bottom: 0,
+              background: theme.palette.background.default,
+            }}
+          >
+            <UserInput handleSubmit={handleSubmit} />
+          </Container>
         </Box>
-        {DrawerList}
-      </Drawer>
-    </div>
+      </Box>
+    </>
   );
 }
+export default Chat;
