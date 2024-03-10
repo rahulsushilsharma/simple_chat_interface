@@ -10,64 +10,30 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import theme from "../theme";
+import { memo, useMemo, useState } from "react";
+import { IconButton } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import SettingsDialog from "./Settings";
 
-export default function Sidebar(props: any) {
-  const { open, handleClose, drawerWidth } = props;
 
+
+
+export default memo(function Sidebar(props: any) {
+  const { open, handleClose, drawerWidth, setSesson, sesson, sessons } = props;
+  const [openSettings,setOpenSettings] = useState(false)
   const DrawerList = (
     <Box>
-      <List>
-        {[
-          "Inbox",
-          "Starred",
-          "Send email",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-          "Drafts",
-        ].map((text, index) => (
+      <List sx={{ minHeight: "88dvh" }}>
+        {sessons?.map((text: any, index: any) => (
           <ListItem key={index} disablePadding>
-            <ListItemButton>
+            <ListItemButton
+              onClick={() => setSesson(text)}
+              selected={sesson.id === text.id}
+            >
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={text?.name} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -80,19 +46,19 @@ export default function Sidebar(props: any) {
           background: theme.palette.background.default,
         }}
       >
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        <ListItem disablePadding>
+          <ListItemButton  onClick={()=>setOpenSettings(true)}>
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Settings"} />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
+
+  const Cached = useMemo(() => DrawerList, [sessons, sesson.id]);
 
   return (
     <div>
@@ -103,16 +69,35 @@ export default function Sidebar(props: any) {
       >
         <Box
           sx={{
-            zIndex:9,
+            zIndex: 9,
             position: "sticky",
             top: 0,
             background: theme.palette.background.default,
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "5px",
           }}
         >
-          <Button onClick={handleClose}>Open drawer</Button>
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={() =>
+              setSesson({
+                id: "-1",
+                name: "",
+              })
+            }
+          >
+            + New Chat
+          </Button>
+          <IconButton onClick={handleClose}>
+            <MenuIcon />
+          </IconButton>
         </Box>
-        {DrawerList}
+        {Cached}
+        {/* {DrawerList} */}
       </Drawer>
+      <SettingsDialog openState={[openSettings,setOpenSettings]}/>
     </div>
   );
-}
+});
