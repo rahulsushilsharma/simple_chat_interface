@@ -1,6 +1,6 @@
 import { Box, Container, IconButton } from "@mui/material";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import theme from "../theme";
 import { MessageList, Message } from "../components/Message";
@@ -9,6 +9,8 @@ import { Ollama } from "@langchain/community/llms/ollama";
 import { v4 as uuidv4 } from "uuid";
 import { getChat, getSessons, saveChat, saveSessons } from "../utils/history";
 import MenuIcon from "@mui/icons-material/Menu";
+import { UserContext} from "../components/UserContextProvider";
+import ScrollToBottom, { useScrollToBottom } from 'react-scroll-to-bottom';
 
 function Chat() {
   const drawerWidth = 300;
@@ -18,11 +20,16 @@ function Chat() {
   const msgRef = useRef<any>();
   const [messages, setMessages] = useState<any[]>([]);
   const [sessons, setSessons] = useState<any[]>([]);
-
   const [sesson, setSesson] = useState<any>({
     id: "-1",
     name: "",
   });
+  const {context }= useContext(UserContext)
+  const scrollToBottom = useScrollToBottom();
+  useEffect(() => {
+    console.log(context)
+  },[context])
+
 
   useEffect(() => {
     console.log(sesson);
@@ -73,7 +80,8 @@ function Chat() {
 
     const ollama = new Ollama({
       baseUrl: "http://localhost:11434", // Default value
-      model: "dolphin-phi", // Default value
+      model: context.userSettingsChat.model.value, // Default value
+      temperature: context.userSettingsChat.temp,
     });
 
     const stream = await ollama.stream(querry);
@@ -82,8 +90,14 @@ function Chat() {
     for await (const chunk of stream) {
       mes += chunk;
       setMessage(mes);
-      msgRef.current?.scrollIntoView({ behavior: "smooth" });
+      // scrollToBottom()
+      msgRef.current.scrollToView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
     }
+    
     setStreaming(false);
     updateMessage({ type: "AI", message: mes });
     setMessage("");
@@ -142,13 +156,18 @@ function Chat() {
           height="100%"
         >
           <Container>
+            <ScrollToBottom>
             <Box display="grid" gap="1em">
               <MessageList messages={messages} />
 
-              {isStreaming && <Message message={message} type={"AI"} />}
+              {isStreaming && (
+                <Message id="cursor" message={message} type={"AI"} />
+              )}
+          <Box ref={msgRef} sx={{background:"blue"}} height={"10px"} width="100%"></Box>
+              
             </Box>
+            </ScrollToBottom>
           </Container>
-          <Box ref={msgRef} width="100%"></Box>
           <Container
             sx={{
               position: "sticky",

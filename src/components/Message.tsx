@@ -8,6 +8,7 @@ import theme from "../theme";
 interface Message {
   message: string;
   type: "AI" | "human";
+  id?:string;
 }
 
 function CustomSyntaxHighlighter(props: any) {
@@ -40,9 +41,9 @@ function CustomSyntaxHighlighter(props: any) {
 }
 
 function Message_(props: Message) {
-  const { message, type } = props;
+  const { message, type,id } = props;
   return (
-    <Paper>
+    <Paper id={id}>
       {type == "AI" ? (
         <Box display="flex" alignItems="center" gap="1em">
           <Avatar
@@ -61,6 +62,7 @@ function Message_(props: Message) {
                 },
               }}
             />
+            <span className="cursor"></span>
           </Box>
         </Box>
       ) : (
@@ -71,7 +73,7 @@ function Message_(props: Message) {
           >
             H
           </Avatar>
-          <Box padding="0 1em">
+          <Box  padding="0 1em">
             <Markdown
               children={message}
               components={{

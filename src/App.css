@@ -1,0 +1,23 @@
+.cursor {
+  width: 2px;
+  height: 16px;
+  border: solid rgb(177, 177, 177);
+  animation: blink 0.5s step-end infinite;
+}
+
+@keyframes blink {
+  from {
+    border-color: rgb(177, 177, 177);
+  }
+  to {
+    border-color: transparent;
+  }
+}
+
+
+#cursor p::after{
+    width: 2px;
+    height: 16px;
+    border: solid rgb(177, 177, 177);
+    animation: blink 0.5s step-end infinite;
+}
