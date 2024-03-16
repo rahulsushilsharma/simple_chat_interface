@@ -1,23 +1,14 @@
-.cursor {
-  width: 2px;
-  height: 16px;
-  border: solid rgb(177, 177, 177);
-  animation: blink 0.5s step-end infinite;
+#cursor > div > div > :last-child::after {
+  content: "";
+  width: 5px;
+  height: 20px;
+  background: #bbbbbb;
+  display: inline-block;
+  animation: cursor-blink 0.9s steps(2) infinite;
 }
 
-@keyframes blink {
-  from {
-    border-color: rgb(177, 177, 177);
+@keyframes cursor-blink {
+  0% {
+    opacity: 0;
   }
-  to {
-    border-color: transparent;
-  }
-}
-
-
-#cursor p::after{
-    width: 2px;
-    height: 16px;
-    border: solid rgb(177, 177, 177);
-    animation: blink 0.5s step-end infinite;
 }

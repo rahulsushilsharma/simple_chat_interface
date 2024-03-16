@@ -44,6 +44,11 @@ export default function SettingsDialog(props: {
     { value: "deepseek-coder", label: "deepseek-coder" },
     { value: "qwen:0.5b", label: "qwen:0.5b" },
   ];
+  const Index = [
+    {value:"randome-index-1", label:"randome index 1" },
+    {value:"randome-index-2", label:"randome index 2" },
+    {value:"randome-index-3", label:"randome index 3" },
+  ]
   return (
     <>
       <Dialog
@@ -60,9 +65,11 @@ export default function SettingsDialog(props: {
 
         <DialogContent sx={{ height: "30vh" }}>
           <Box display="grid" gap="1em">
+            <Box display="flex" gap="1em" width="100%" justifyContent="space-between">  
             <Autocomplete
               disablePortal
               disableClearable
+              fullWidth
               value={userSettings.model}
               onChange={(_e, value) => setUserSettings({ ...userSettings, model: value || {value:"qwen:0.5b",label:"qwen:0.5b"} })}
               id="combo-box-demo"
@@ -70,6 +77,18 @@ export default function SettingsDialog(props: {
               options={Models}
               renderInput={(params) => <TextField {...params} label="Model" />}
             />
+            <Autocomplete
+              disablePortal
+              disableClearable
+              fullWidth
+              value={userSettings.vectorDbIndex ? userSettings.vectorDbIndex : {value:"",label:"No Index selected"}}
+              onChange={(_e, value) => setUserSettings({ ...userSettings, vectorDbIndex: value || {value:"randome-index-1",label:"randome index 1"} })}
+              id="combo-box-demo"
+              isOptionEqualToValue={(option, value) => option.value === value.value}
+              options={Index}
+              renderInput={(params) => <TextField {...params} label="Model" />}
+            />
+            </Box>
             <Box>
               <Typography>Temperature (0-1) {userSettings.temp}</Typography>
               <Slider

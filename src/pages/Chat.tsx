@@ -9,27 +9,30 @@ import { Ollama } from "@langchain/community/llms/ollama";
 import { v4 as uuidv4 } from "uuid";
 import { getChat, getSessons, saveChat, saveSessons } from "../utils/history";
 import MenuIcon from "@mui/icons-material/Menu";
-import { UserContext} from "../components/UserContextProvider";
-import ScrollToBottom, { useScrollToBottom } from 'react-scroll-to-bottom';
+import { UserContext } from "../components/UserContextProvider";
+import Upload from "../components/Upload";
 
+async function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 function Chat() {
   const drawerWidth = 300;
   const [isDrawerOpen, setDrawerOpen] = useState(true);
   const [isStreaming, setStreaming] = useState(false);
   const [message, setMessage] = useState("");
-  const msgRef = useRef<any>();
+  const msgRef = useRef<HTMLDivElement>();
+  const chatContainer = useRef<HTMLDivElement>();
+
   const [messages, setMessages] = useState<any[]>([]);
   const [sessons, setSessons] = useState<any[]>([]);
   const [sesson, setSesson] = useState<any>({
     id: "-1",
     name: "",
   });
-  const {context }= useContext(UserContext)
-  const scrollToBottom = useScrollToBottom();
+  const { context } = useContext(UserContext);
   useEffect(() => {
-    console.log(context)
-  },[context])
-
+    console.log(context);
+  }, [context]);
 
   useEffect(() => {
     console.log(sesson);
@@ -42,6 +45,27 @@ function Chat() {
     console.log(chats);
   }, [sesson]);
 
+  // const resize_ob = new ResizeObserver(function(entries) {
+  //   // since we are observing only a single element, so we access the first element in entries array
+  //   let rect = entries[0].contentRect;
+
+  //   // current width & height
+  //   let width = rect.width;
+  //   let height = rect.height;
+
+  //   console.log('Current Width : ' + width);
+  //   console.log('Current Height : ' + height);
+  // });
+
+  // useEffect(() => {
+  //   if (!msgRef.current) return;
+  //   const resizeObserver = new ResizeObserver(() => {
+  //     // Do what you want to do when the size of the element changes
+  //     console.log("changed",msgRef.current);
+  //   });
+  //   resizeObserver.observe(msgRef.current);
+  //   return () => resizeObserver.disconnect(); // clean up
+  // }, []);
   useEffect(() => {
     const sessons = getSessons();
     if (sessons) setSessons(sessons);
@@ -69,6 +93,22 @@ function Chat() {
       return [...prev, message];
     });
   }
+  //   function scrollToBottom() {
+  //     // Select the scrolling div
+
+  //     let scrollingDiv = msgRef.current;
+
+  // if(!scrollingDiv) return
+  //     // Scroll to the bottom
+  //     console.log(scrollingDiv, scrollingDiv.scrollHeight)
+
+  //     scrollingDiv.scrollTop = scrollingDiv.scrollHeight;
+  // }
+
+  async function scrollToBottom() {
+    if (!chatContainer.current) return;
+    msgRef.current?.scrollIntoView({ behavior: "instant" });
+  }
 
   async function handleSubmit(querry: string) {
     if (sesson.id == "-1") {
@@ -83,26 +123,20 @@ function Chat() {
       model: context.userSettingsChat.model.value, // Default value
       temperature: context.userSettingsChat.temp,
     });
-
+    if (chatContainer.current)
+      chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
     const stream = await ollama.stream(querry);
     let mes = "";
-
     for await (const chunk of stream) {
       mes += chunk;
       setMessage(mes);
-      // scrollToBottom()
-      msgRef.current.scrollToView({
-        behavior: "smooth",
-        block: "end",
-        inline: "nearest",
-      });
+      await scrollToBottom();
     }
-    
+
     setStreaming(false);
     updateMessage({ type: "AI", message: mes });
     setMessage("");
   }
-  // const drawerWidth = 240; // You can adjust the initial width of the drawer
 
   function handleDrawerOpen() {
     setDrawerOpen(true);
@@ -156,17 +190,33 @@ function Chat() {
           height="100%"
         >
           <Container>
-            <ScrollToBottom>
-            <Box display="grid" gap="1em">
+            <Box ref={chatContainer} display="grid" gap="1em">
+              {
+                sesson.id == "-1" ? (
+                  <Upload/>
+                ):
+                <>
               <MessageList messages={messages} />
 
               {isStreaming && (
-                <Message id="cursor" message={message} type={"AI"} />
+                <>
+                  <Message
+                    id={isStreaming && "cursor"}
+                    message={message}
+                    type={"AI"}
+                  />
+                </>
               )}
-          <Box ref={msgRef} sx={{background:"blue"}} height={"10px"} width="100%"></Box>
-              
+              <Box
+                ref={msgRef}
+                sx={{ background: "blue" }}
+                height={"10px"}
+                width="100%"
+              ></Box>
+              </>
+            }
+
             </Box>
-            </ScrollToBottom>
           </Container>
           <Container
             sx={{
