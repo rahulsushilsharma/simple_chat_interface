@@ -1,4 +1,4 @@
-import { Box, Container, IconButton } from "@mui/material";
+import { Box, Button, Container, IconButton } from "@mui/material";
 
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Sidebar from "../components/Sidebar";
@@ -12,9 +12,20 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { UserContext } from "../components/UserContextProvider";
 import Upload from "../components/Upload";
 
+/**
+ * Delays the execution of the code for the specified number of milliseconds.
+ *
+ * @param {number} ms - The number of milliseconds to delay the execution.
+ * @return {Promise<void>} A promise that resolves after the specified delay.
+ */
 async function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+/**
+ * Renders the Chat component.
+ *
+ * @return {JSX.Element} The rendered Chat component.
+ */
 function Chat() {
   const drawerWidth = 300;
   const [isDrawerOpen, setDrawerOpen] = useState(true);
@@ -35,6 +46,7 @@ function Chat() {
   }, [context]);
 
   useEffect(() => {
+    // load sessons from local storage
     console.log(sesson);
     if (sesson.id == "-1") {
       setMessages([]);
@@ -67,6 +79,7 @@ function Chat() {
   //   return () => resizeObserver.disconnect(); // clean up
   // }, []);
   useEffect(() => {
+    // load sessons from local storage
     const sessons = getSessons();
     if (sessons) setSessons(sessons);
   }, []);
@@ -107,6 +120,14 @@ function Chat() {
 
   async function scrollToBottom() {
     if (!chatContainer.current) return;
+    const scrollingElement =
+      chatAreaRef.current.scrollingElement || chatAreaRef.current;
+    const { scrollTop, scrollHeight, clientHeight } = scrollingElement;
+    const isAtBottom = scrollHeight - scrollTop <= clientHeight + 100; // Add a buffer of 100px
+
+    if (isAtBottom) {
+      scrollingElement.scrollTop = messageListRef.current.scrollHeight;
+    }
     msgRef.current?.scrollIntoView({ behavior: "instant" });
   }
 
@@ -171,7 +192,8 @@ function Chat() {
         }}
       >
         {!isDrawerOpen && (
-          <IconButton
+          <Button
+            variant="outlined"
             sx={{
               position: "sticky",
               top: 0,
@@ -179,7 +201,7 @@ function Chat() {
             onClick={handleDrawerOpen}
           >
             <MenuIcon />
-          </IconButton>
+          </Button>
         )}
         {cachedSideBar}
 
@@ -191,31 +213,29 @@ function Chat() {
         >
           <Container>
             <Box ref={chatContainer} display="grid" gap="1em">
-              {
-                sesson.id == "-1" ? (
-                  <Upload/>
-                ):
+              {sesson.id == "-1" ? (
+                <Upload />
+              ) : (
                 <>
-              <MessageList messages={messages} />
+                  <MessageList messages={messages} />
 
-              {isStreaming && (
-                <>
-                  <Message
-                    id={isStreaming && "cursor"}
-                    message={message}
-                    type={"AI"}
-                  />
+                  {isStreaming && (
+                    <>
+                      <Message
+                        id={isStreaming && "cursor"}
+                        message={message}
+                        type={"AI"}
+                      />
+                    </>
+                  )}
+                  <Box
+                    ref={msgRef}
+                    sx={{ background: "blue" }}
+                    height={"10px"}
+                    width="100%"
+                  ></Box>
                 </>
               )}
-              <Box
-                ref={msgRef}
-                sx={{ background: "blue" }}
-                height={"10px"}
-                width="100%"
-              ></Box>
-              </>
-            }
-
             </Box>
           </Container>
           <Container

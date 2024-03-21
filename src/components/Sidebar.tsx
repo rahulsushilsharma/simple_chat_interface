@@ -20,7 +20,7 @@ import SettingsDialog from "./Settings";
 
 export default memo(function Sidebar(props: any) {
   const { open, handleClose, drawerWidth, setSesson, sesson, sessons } = props;
-  const [openSettings,setOpenSettings] = useState(false)
+  const [openSettings, setOpenSettings] = useState(false);
   const DrawerList = (
     <Box>
       <List sx={{ minHeight: "88dvh" }}>
@@ -47,7 +47,7 @@ export default memo(function Sidebar(props: any) {
         }}
       >
         <ListItem disablePadding>
-          <ListItemButton  onClick={()=>setOpenSettings(true)}>
+          <ListItemButton onClick={() => setOpenSettings(true)}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -76,6 +76,7 @@ export default memo(function Sidebar(props: any) {
             display: "flex",
             justifyContent: "space-between",
             padding: "5px",
+            gap: "5px",
           }}
         >
           <Button
@@ -90,14 +91,14 @@ export default memo(function Sidebar(props: any) {
           >
             + New Chat
           </Button>
-          <IconButton onClick={handleClose}>
+          <Button variant="outlined" onClick={handleClose}>
             <MenuIcon />
-          </IconButton>
+          </Button>
         </Box>
         {Cached}
         {/* {DrawerList} */}
       </Drawer>
-      <SettingsDialog openState={[openSettings,setOpenSettings]}/>
+      <SettingsDialog openState={[openSettings, setOpenSettings]} />
     </div>
   );
 });
