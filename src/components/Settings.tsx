@@ -93,12 +93,12 @@ export default function SettingsDialog(props: {
   };
 
   const Models = [
-    { value: "dolphin-mistral", label: "mistral" },
-    { value: "dolphin-phi", label: "phi" },
-    { value: "llama2-uncensored", label: "llama2" },
-    { value: "tinyllama", label: "tinyllama" },
-    { value: "deepseek-coder", label: "deepseek-coder" },
-    { value: "qwen:0.5b", label: "qwen:0.5b" },
+    { value: "dolphin-mistral", label: "mistral", max_tokens: 3000 },
+    { value: "dolphin-phi", label: "phi", max_tokens: 3000 },
+    { value: "llama2-uncensored", label: "llama2", max_tokens: 3000 },
+    { value: "tinyllama", label: "tinyllama", max_tokens: 3000 },
+    { value: "deepseek-coder", label: "deepseek-coder", max_tokens: 3000 },
+    { value: "qwen:0.5b", label: "qwen:0.5b", max_tokens: 3000 },
   ];
   const Index = [
     { value: "randome-index-1", label: "randome index 1" },
@@ -135,7 +135,11 @@ export default function SettingsDialog(props: {
                 onChange={(_e, value) =>
                   setUserSettings({
                     ...userSettings,
-                    model: value || { value: "qwen:0.5b", label: "qwen:0.5b" },
+                    model: value || {
+                      value: "qwen:0.5b",
+                      label: "qwen:0.5b",
+                      max_tokens: 3000,
+                    },
                   })
                 }
                 id="combo-box-demo"

@@ -4,10 +4,11 @@ import { Dispatch, SetStateAction, createContext, useState } from "react";
 interface UserSettingsChat {
   model: { value: string; label: string };
   temp: number;
-  vectorDbIndex:{
-    value:string
-    label:string
-  } | null
+  vectorDbIndex: {
+    value: string;
+    label: string;
+    max_tokens: number;
+  } | null;
 }
 
 interface User {
@@ -15,23 +16,22 @@ interface User {
   userSettingsChat: UserSettingsChat;
 }
 
-
 interface UserContextType {
-    context: User;
-    setContext: Dispatch<SetStateAction<User>>;
-  }
-  
-  export const UserContext = createContext<UserContextType>({
-    context: {
-      userId: "",
-      userSettingsChat: {
-        model: { value: "qwen:0.5b", label: "qwen:0.5b" },
-        temp: 0.7,
-        vectorDbIndex: null
-      },
+  context: User;
+  setContext: Dispatch<SetStateAction<User>>;
+}
+
+export const UserContext = createContext<UserContextType>({
+  context: {
+    userId: "",
+    userSettingsChat: {
+      model: { value: "qwen:0.5b", label: "qwen:0.5b" },
+      temp: 0.7,
+      vectorDbIndex: null,
     },
-    setContext: () => {},
-  });
+  },
+  setContext: () => {},
+});
 
 const UserContextProvider = (props: any) => {
   const [context, setContext] = useState<User>({
@@ -39,7 +39,7 @@ const UserContextProvider = (props: any) => {
     userSettingsChat: {
       model: { value: "qwen:0.5b", label: "qwen:0.5b" },
       temp: 0.7,
-      vectorDbIndex: null
+      vectorDbIndex: null,
     },
   });
 

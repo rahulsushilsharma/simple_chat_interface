@@ -15,25 +15,22 @@ import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsDialog from "./Settings";
 
-
-
-
 export default memo(function Sidebar(props: any) {
   const { open, handleClose, drawerWidth, setSesson, sesson, sessons } = props;
   const [openSettings, setOpenSettings] = useState(false);
   const DrawerList = (
     <Box>
       <List sx={{ minHeight: "88dvh" }}>
-        {sessons?.map((text: any, index: any) => (
+        {sessons?.map((session: any, index: any) => (
           <ListItem key={index} disablePadding>
             <ListItemButton
-              onClick={() => setSesson(text)}
-              selected={sesson.id === text.id}
+              onClick={() => setSesson(session)}
+              selected={sesson.id === session.session_id}
             >
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                <MailIcon />
               </ListItemIcon>
-              <ListItemText primary={text?.name} />
+              <ListItemText primary={session?.session_title} />
             </ListItemButton>
           </ListItem>
         ))}
