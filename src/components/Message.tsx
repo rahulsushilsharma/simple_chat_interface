@@ -8,7 +8,6 @@ import {
   DialogContentText,
   DialogTitle,
   Paper,
-  TextField,
   Typography,
 } from "@mui/material";
 import { blue, green } from "@mui/material/colors";
@@ -16,52 +15,42 @@ import { memo, useState } from "react";
 import Markdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
-import theme from "../theme";
+import { MessageInterface, CitationInterface } from "../interfaces/Interfaces";
 
-interface citation {
-  page_content: string;
-  metadata: any;
-}
-interface Message {
-  message: string;
-  type: "AI" | "human";
-  id?: string;
-  citation?: citation[] | any[];
-}
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function CustomSyntaxHighlighter(props: any) {
   const { children, className, ...rest } = props;
   const match = /language-(\w+)/.exec(className || "");
+  const language = match ? match[1] : "text";
+  console.log(language, children, match);
   return (
     <>
-      {match ? (
+      {children?.includes("\n") ? (
         <Paper elevation={3}>
           <Box>
-            <Typography>{match[1]}</Typography>
+            <Typography>{language}</Typography>
           </Box>
           <SyntaxHighlighter
             {...rest}
             PreTag="div"
             children={String(children)}
-            language={match[1]}
+            language={language}
             style={darcula}
           />
         </Paper>
       ) : (
-        <strong
-          style={{ background: theme.palette.text.disabled, padding: "0 5px" }}
-        >
-          {String(children)}
-        </strong>
+        <span>
+          <strong>{children}</strong>
+        </span>
       )}
     </>
   );
 }
 
-function Message_(props: Message) {
-  const { message, type, id, citation } = props;
+function Message_(props: MessageInterface) {
+  const { message, type, citation } = props;
   return (
-    <Paper id={id}>
+    <Paper>
       {type == "AI" ? (
         <Box display="flex" alignItems="center" gap="1em">
           <Avatar
@@ -109,7 +98,7 @@ function Message_(props: Message) {
   );
 }
 
-function CitationDialog(props: { citation: citation[] | any[] }) {
+function CitationDialog(props: { citation: CitationInterface[] }) {
   const [open, setOpen] = useState(false);
   const citation = props.citation;
   const handleClickOpen = () => {
@@ -120,6 +109,13 @@ function CitationDialog(props: { citation: citation[] | any[] }) {
     setOpen(false);
   };
 
+  function showMetadataa(metadata: Record<string, unknown>) {
+    const meta = [];
+    for (const [key, value] of Object.entries(metadata)) {
+      meta.push(`${key}: ${value}`);
+    }
+    return meta;
+  }
   return (
     <div>
       <Button
@@ -147,7 +143,9 @@ function CitationDialog(props: { citation: citation[] | any[] }) {
                 {val.page_content}
               </DialogContentText>
               <DialogContentText id="alert-dialog-description">
-                {val.metadata}
+                {showMetadataa(val.metadata).map((val, index) => (
+                  <Typography key={index}>{val}</Typography>
+                ))}
               </DialogContentText>
             </Box>
           ))}
@@ -162,7 +160,7 @@ function CitationDialog(props: { citation: citation[] | any[] }) {
   );
 }
 
-function MessageList_(props: { messages: Message[] }) {
+function MessageList_(props: { messages: MessageInterface[] }) {
   return (
     <>
       {props.messages.map((val, index) => (
@@ -171,6 +169,7 @@ function MessageList_(props: { messages: Message[] }) {
           message={val.message}
           type={val.type as "human" | "AI"}
           citation={val.citation}
+          message_sequence={val.message_sequence}
         />
       ))}
     </>
