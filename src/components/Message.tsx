@@ -1,23 +1,12 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Container, Paper, Typography } from "@mui/material";
 import { blue, green } from "@mui/material/colors";
-import { memo, useState } from "react";
+import { memo } from "react";
 
 import Markdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-import { MessageInterface, CitationInterface } from "../interfaces/Interfaces";
+import { MessageInterface } from "../interfaces/Interfaces";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function CustomSyntaxHighlighter(props: any) {
@@ -50,11 +39,11 @@ function CustomSyntaxHighlighter(props: any) {
 }
 
 function Message_(props: MessageInterface) {
-  const { message, type, citation } = props;
+  const { message, type } = props;
   return (
-    <Paper>
-      {type == "AI" ? (
-        <Box display="flex" alignItems="center" gap="1em">
+    <Paper sx={{ maxWidth: "94vw" }}>
+      {type == "assistant" ? (
+        <Box>
           <Avatar
             sx={{ bgcolor: blue[500], alignSelf: "start" }}
             variant="rounded"
@@ -62,7 +51,7 @@ function Message_(props: MessageInterface) {
             AI
           </Avatar>
 
-          <Box padding="0 1em">
+          <Container>
             <Markdown
               children={message}
               components={{
@@ -72,12 +61,10 @@ function Message_(props: MessageInterface) {
               }}
             />
             <span className="cursor"></span>
-
-            {citation && <CitationDialog citation={citation} />}
-          </Box>
+          </Container>
         </Box>
       ) : (
-        <Box display="flex" alignItems="center" gap="1em">
+        <Box>
           <Avatar
             sx={{ bgcolor: green[500], alignSelf: "start" }}
             variant="rounded"
@@ -100,68 +87,6 @@ function Message_(props: MessageInterface) {
   );
 }
 
-function CitationDialog(props: { citation: CitationInterface[] }) {
-  const [open, setOpen] = useState(false);
-  const citation = props.citation;
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  function showMetadataa(metadata: Record<string, unknown>) {
-    const meta = [];
-    for (const [key, value] of Object.entries(metadata)) {
-      meta.push(`${key}: ${value}`);
-    }
-    return meta;
-  }
-  return (
-    <div>
-      <Button
-        variant="outlined"
-        onClick={handleClickOpen}
-        sx={{ width: "100%" }}
-      >
-        view citation
-      </Button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle sx={{ textAlign: "center" }} id="alert-dialog-title">
-          {"Set User ID"}
-        </DialogTitle>
-        <DialogContent sx={{ maxHeight: "80vh" }}>
-          {citation.map((val, index) => (
-            <Box key={index}>
-              <DialogContentText id="alert-dialog-description">
-                {val.page_content}
-              </DialogContentText>
-              <DialogContentText id="alert-dialog-description">
-                {showMetadataa(val.metadata).map((val, index) => (
-                  <Typography key={index}>{val}</Typography>
-                ))}
-              </DialogContentText>
-            </Box>
-          ))}
-        </DialogContent>
-        <DialogActions sx={{ justifyContent: "center" }}>
-          <Button onClick={handleClose} variant="contained">
-            close
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
-}
-
 function MessageList_(props: { messages: MessageInterface[] }) {
   return (
     <>
@@ -169,8 +94,7 @@ function MessageList_(props: { messages: MessageInterface[] }) {
         <Message_
           key={index}
           message={val.message}
-          type={val.type as "human" | "AI"}
-          citation={val.citation}
+          type={val.type}
           message_sequence={val.message_sequence}
         />
       ))}

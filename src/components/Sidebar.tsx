@@ -11,26 +11,26 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import theme from "../theme";
 import { memo, useMemo, useState } from "react";
-import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsDialog from "./Settings";
 
 export default memo(function Sidebar(props: any) {
   const { open, handleClose, drawerWidth, setSesson, sesson, sessons } = props;
   const [openSettings, setOpenSettings] = useState(false);
+  console.log("sessons", sessons);
   const DrawerList = (
     <Box>
       <List sx={{ minHeight: "88dvh" }}>
-        {sessons?.map((session: any, index: any) => (
+        {sessons?.map((session: Record<string, string>, index: number) => (
           <ListItem key={index} disablePadding>
             <ListItemButton
               onClick={() => setSesson(session)}
-              selected={sesson.id === session.session_id}
+              selected={sesson.id === session.id}
             >
               <ListItemIcon>
                 <MailIcon />
               </ListItemIcon>
-              <ListItemText primary={session?.session_title} />
+              <ListItemText primary={session?.name} />
             </ListItemButton>
           </ListItem>
         ))}

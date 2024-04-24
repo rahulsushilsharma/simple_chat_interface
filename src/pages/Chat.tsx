@@ -1,4 +1,4 @@
-import { Box, Container, IconButton } from "@mui/material";
+import { Box, Container, IconButton, Typography } from "@mui/material";
 
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Sidebar from "../components/Sidebar";
@@ -11,6 +11,7 @@ import { getChat, getSessons, saveChat, saveSessons } from "../utils/history";
 import MenuIcon from "@mui/icons-material/Menu";
 import { UserContext } from "../components/UserContextProvider";
 import Upload from "../components/Upload";
+import { MessageInterface } from "../interfaces/Interfaces";
 
 async function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -24,11 +25,24 @@ function Chat() {
   const chatContainer = useRef<HTMLDivElement>();
 
   const [messages, setMessages] = useState<any[]>([]);
+  const [filteredMessages, setFilteredMessages] = useState<any[]>([]);
+
   const [sessons, setSessons] = useState<any[]>([]);
   const [sesson, setSesson] = useState<any>({
     id: "-1",
     name: "",
   });
+
+  const [evalData, setEvalData] = useState<{
+    total_duration: number;
+    load_duration: number;
+    prompt_eval_count: number;
+    prompt_eval_duration: number;
+    eval_count: number;
+    eval_duration: number;
+  }>();
+
+  const [chatLength, setChatLength] = useState(0);
   const { context } = useContext(UserContext);
   useEffect(() => {
     console.log(context);
@@ -43,6 +57,7 @@ function Chat() {
     const chats = getChat(sesson.id);
     if (chats) setMessages(chats);
     console.log(chats);
+    setChatLength(0);
   }, [sesson]);
 
   // const resize_ob = new ResizeObserver(function(entries) {
@@ -74,7 +89,12 @@ function Chat() {
   useEffect(() => {
     console.log(messages);
     saveChat(sesson.id, messages);
-  }, [messages]);
+    setFilteredMessages(
+      messages.map((m) => {
+        return { role: m.type, content: m.message };
+      })
+    );
+  }, [messages, sesson.id]);
 
   function createSesson(name: string) {
     const sessonId = uuidv4();
@@ -88,7 +108,7 @@ function Chat() {
     saveSessons([...sessons, sesson]);
   }
 
-  function updateMessage(message: any) {
+  function updateMessage(message: MessageInterface) {
     setMessages((prev) => {
       return [...prev, message];
     });
@@ -116,26 +136,82 @@ function Chat() {
     }
 
     setStreaming(true);
-    updateMessage({ type: "human", message: querry });
-
-    const ollama = new Ollama({
-      baseUrl: "http://localhost:11434", // Default value
-      model: context.userSettingsChat.model.value, // Default value
-      temperature: context.userSettingsChat.temp,
+    updateMessage({
+      type: "user",
+      message: querry,
+      message_sequence: chatLength,
     });
+    setChatLength(chatLength + 1);
+    await delay(100);
+    console.log("messages", filteredMessages);
+    // const ollama = new Ollama({
+    //   baseUrl: "http://localhost:11434", // Default value
+    //   model: context?.model?.model, // Default value
+    //   temperature: context?.temp,
+    // });
+
     if (chatContainer.current)
       chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
-    const stream = await ollama.stream(querry);
+
+    // const stream = await ollama.stream(querry);
+
+    const response = await fetch("http://localhost:11434/api/chat", {
+      method: "POST",
+      body: JSON.stringify({
+        messages: [...filteredMessages, { role: "user", content: querry }],
+        // temperature: context?.temp,
+        model: context?.model?.model,
+        stream: true,
+      }),
+    });
+
+    const stream = response.body
+      ?.pipeThrough(new TextDecoderStream())
+      .getReader();
+
     let mes = "";
-    for await (const chunk of stream) {
-      mes += chunk;
-      setMessage(mes);
+    // eslint-disable-next-line no-constant-condition
+    while (true && stream) {
+      const { done, value } = await stream.read();
+      if (done) break; // The streaming has ended.
+      console.log(value);
+      for (const line of value.split("\n")) {
+        if (!line) continue;
+        const value = line;
+        console.log("value", value);
+        const json = JSON.parse(value.trim() || "{}");
+        if (json?.done) {
+          const evalData = {
+            total_duration: json?.total_duration / 1000000000,
+            load_duration: json?.load_duration / 1000000000,
+            prompt_eval_count: json?.prompt_eval_count,
+            prompt_eval_duration: json?.prompt_eval_duration / 1000000000,
+            eval_count: json?.eval_count,
+            eval_duration: json?.eval_duration / 1000000000,
+          };
+
+          setEvalData(evalData);
+        }
+        mes += JSON.parse(value.trim() || "{}")?.message.content;
+        setMessage(mes);
+      }
+
       await scrollToBottom();
     }
+    // for await (const chunk of stream) {
+    //   mes += chunk;
+    //   setMessage(mes);z
+    //   await scrollToBottom();
+    // }
 
     setStreaming(false);
-    updateMessage({ type: "AI", message: mes });
-    // setMessage("");
+    updateMessage({
+      type: "assistant",
+      message: mes,
+      message_sequence: chatLength,
+    });
+    setChatLength(chatLength + 1);
+    setMessage("");
   }
 
   function handleDrawerOpen() {
@@ -192,13 +268,30 @@ function Chat() {
           <Container>
             <Box ref={chatContainer} display="grid" gap="1em">
               {sesson.id == "-1" ? (
-                <Upload />
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  width="100%"
+                  height="50vh"
+                >
+                  {" "}
+                  <Typography variant="h3">Chat with Ollama</Typography>
+                </Box>
               ) : (
                 <>
                   <MessageList messages={messages} />
 
                   <>
-                    <Message id={"cursor"} message={message} type={"AI"} />
+                    {isStreaming && (
+                      <Box id={"cursor"}>
+                        <Message
+                          message={message}
+                          type={"assistant"}
+                          message_sequence={0}
+                        />
+                      </Box>
+                    )}
                   </>
 
                   <Box
@@ -218,6 +311,21 @@ function Chat() {
               background: theme.palette.background.default,
             }}
           >
+            <Box>
+              {" "}
+              <Typography>
+                {" "}
+                Total Duration:{evalData?.total_duration}, Prompt Eval Count:{" "}
+                {evalData?.prompt_eval_count}, Prompt Eval Duration:{" "}
+                {evalData?.prompt_eval_duration}, Eval Count:{" "}
+                {evalData?.eval_count}, Eval Duration: {evalData?.eval_duration}{" "}
+                eval rate{" "}
+                {evalData?.eval_count &&
+                  evalData?.total_duration &&
+                  evalData?.eval_count / evalData?.total_duration}
+                tokens/seconds
+              </Typography>
+            </Box>
             <UserInput handleSubmit={handleSubmit} />
           </Container>
         </Box>

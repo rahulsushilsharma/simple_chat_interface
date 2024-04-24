@@ -1,47 +1,40 @@
 // create a user context provider
 import { Dispatch, SetStateAction, createContext, useState } from "react";
 
-interface UserSettingsChat {
-  model: { value: string; label: string };
-  temp: number;
-  vectorDbIndex: {
-    value: string;
-    label: string;
-    max_tokens: number;
-  } | null;
+export interface Model {
+  name: string;
+  model: string;
+  modified_at: string;
+  size: number;
+  digest: string;
+  details: Details;
 }
 
-interface User {
-  userId: string;
-  userSettingsChat: UserSettingsChat;
+export interface Details {
+  parent_model: string;
+  format: string;
+  family: string;
+  families: string[];
+  parameter_size: string;
+  quantization_level: string;
+}
+
+interface UserSettingsChat {
+  model?: Model;
+  temp?: number;
 }
 
 interface UserContextType {
-  context: User;
-  setContext: Dispatch<SetStateAction<User>>;
+  context?: UserSettingsChat;
+  setContext: Dispatch<SetStateAction<UserSettingsChat>>;
 }
 
 export const UserContext = createContext<UserContextType>({
-  context: {
-    userId: "",
-    userSettingsChat: {
-      model: { value: "qwen:0.5b", label: "qwen:0.5b" },
-      temp: 0.7,
-      vectorDbIndex: null,
-    },
-  },
   setContext: () => {},
 });
 
-const UserContextProvider = (props: any) => {
-  const [context, setContext] = useState<User>({
-    userId: "",
-    userSettingsChat: {
-      model: { value: "qwen:0.5b", label: "qwen:0.5b" },
-      temp: 0.7,
-      vectorDbIndex: null,
-    },
-  });
+const UserContextProvider = (props: { children: React.ReactNode }) => {
+  const [context, setContext] = useState<UserSettingsChat>({});
 
   return (
     <UserContext.Provider value={{ context, setContext }}>
