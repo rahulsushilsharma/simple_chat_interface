@@ -39,11 +39,18 @@ export default function SettingsDialog(props: {
   const [models, setModels] = useState([]);
 
   async function getModels() {
-    const models = await fetch(" http://localhost:11434/api/tags").then(
+    const models = await fetch("http://localhost:11434/api/tags").then(
       (response) => response.json()
     );
     console.log(models);
     setModels(models.models);
+    setUserSettings({
+      ...userSettings,
+      model: models.models[0],
+    });
+    console.log("model", models.models[0]);
+    setUserSettings({ ...userSettings, temp: 0.7 });
+    setTimeout(() => saveSettings(), 500);
   }
 
   useEffect(() => {
@@ -63,7 +70,7 @@ export default function SettingsDialog(props: {
           {"User Settings"}
         </DialogTitle>
 
-        <DialogContent>
+        <DialogContent sx={{ height: "50dvh" }}>
           <Box display="grid" gap="1em">
             <Box
               display="flex"

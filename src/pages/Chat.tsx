@@ -1,17 +1,26 @@
 import { Box, Container, IconButton, Typography } from "@mui/material";
 
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Sidebar from "../components/Sidebar";
 import theme from "../theme";
 import { MessageList, Message } from "../components/Message";
 import UserInput from "../components/UserInput";
-import { Ollama } from "@langchain/community/llms/ollama";
 import { v4 as uuidv4 } from "uuid";
 import { getChat, getSessons, saveChat, saveSessons } from "../utils/history";
 import MenuIcon from "@mui/icons-material/Menu";
 import { UserContext } from "../components/UserContextProvider";
-import Upload from "../components/Upload";
-import { MessageInterface } from "../interfaces/Interfaces";
+import {
+  MessageInterface,
+  OllamaMessageInterface,
+  SessonInterface,
+} from "../interfaces/Interfaces";
 
 async function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -24,11 +33,13 @@ function Chat() {
   const msgRef = useRef<HTMLDivElement>();
   const chatContainer = useRef<HTMLDivElement>();
 
-  const [messages, setMessages] = useState<any[]>([]);
-  const [filteredMessages, setFilteredMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<MessageInterface[]>([]);
+  const [filteredMessages, setFilteredMessages] = useState<
+    OllamaMessageInterface[]
+  >([]);
 
-  const [sessons, setSessons] = useState<any[]>([]);
-  const [sesson, setSesson] = useState<any>({
+  const [sessons, setSessons] = useState<SessonInterface[]>([]);
+  const [sesson, setSesson] = useState<SessonInterface>({
     id: "-1",
     name: "",
   });
@@ -49,7 +60,7 @@ function Chat() {
   }, [context]);
 
   useEffect(() => {
-    console.log(sesson);
+    console.log("<sesson>", sesson);
     if (sesson.id == "-1") {
       setMessages([]);
       return;
@@ -59,6 +70,18 @@ function Chat() {
     console.log(chats);
     setChatLength(0);
   }, [sesson]);
+
+  const deleteSession = useCallback(function deleteSession(
+    sessionId: string,
+    sessions: SessonInterface[]
+  ) {
+    setSessons(
+      sessions.filter((session) => {
+        return session.id === sessionId;
+      })
+    );
+  },
+  []);
 
   // const resize_ob = new ResizeObserver(function(entries) {
   //   // since we are observing only a single element, so we access the first element in entries array
@@ -87,7 +110,7 @@ function Chat() {
   }, []);
 
   useEffect(() => {
-    console.log(messages);
+    console.log("<Messages>", messages);
     saveChat(sesson.id, messages);
     setFilteredMessages(
       messages.map((m) => {
@@ -225,6 +248,7 @@ function Chat() {
   const cachedSideBar = useMemo(
     () => (
       <Sidebar
+        deleteSession={deleteSession}
         setSesson={setSesson}
         sesson={sesson}
         sessons={sessons}
@@ -233,7 +257,7 @@ function Chat() {
         handleClose={handleDrawerClose}
       />
     ),
-    [sesson, sessons, isDrawerOpen]
+    [sesson, sessons, isDrawerOpen, deleteSession]
   );
 
   return (
@@ -313,20 +337,28 @@ function Chat() {
           >
             <Box>
               {" "}
-              <Typography>
-                {" "}
-                Total Duration:{evalData?.total_duration}, Prompt Eval Count:{" "}
-                {evalData?.prompt_eval_count}, Prompt Eval Duration:{" "}
-                {evalData?.prompt_eval_duration}, Eval Count:{" "}
-                {evalData?.eval_count}, Eval Duration: {evalData?.eval_duration}{" "}
-                eval rate{" "}
-                {evalData?.eval_count &&
-                  evalData?.total_duration &&
-                  evalData?.eval_count / evalData?.total_duration}
-                tokens/seconds
-              </Typography>
+              {evalData && (
+                <Typography fontSize="13px">
+                  {" "}
+                  Total Duration:{evalData?.total_duration?.toFixed(2)}, Prompt
+                  Eval Count: {evalData?.prompt_eval_count?.toFixed(2)}, Prompt
+                  Eval Duration: {evalData?.prompt_eval_duration?.toFixed(2)},
+                  Eval Count: {evalData?.eval_count?.toFixed(2)}, Eval Duration:{" "}
+                  {evalData?.eval_duration?.toFixed(2)}, eval rate{" "}
+                  {evalData?.eval_count &&
+                    evalData?.total_duration &&
+                    (evalData?.eval_count / evalData?.total_duration).toFixed(
+                      2
+                    )}
+                  tokens/seconds
+                </Typography>
+              )}
             </Box>
             <UserInput handleSubmit={handleSubmit} />
+            <Box display="flex" justifyContent="space-between">
+              <Typography fontSize="13px">{context?.model?.model}</Typography>
+              <Typography fontSize="13px">{context?.temp}</Typography>
+            </Box>
           </Container>
         </Box>
       </Box>

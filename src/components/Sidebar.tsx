@@ -13,6 +13,7 @@ import theme from "../theme";
 import { memo, useMemo, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsDialog from "./Settings";
+import { Tooltip } from "@mui/material";
 
 export default memo(function Sidebar(props: any) {
   const { open, handleClose, drawerWidth, setSesson, sesson, sessons } = props;
@@ -22,17 +23,26 @@ export default memo(function Sidebar(props: any) {
     <Box>
       <List sx={{ minHeight: "88dvh" }}>
         {sessons?.map((session: Record<string, string>, index: number) => (
-          <ListItem key={index} disablePadding>
-            <ListItemButton
-              onClick={() => setSesson(session)}
-              selected={sesson.id === session.id}
-            >
-              <ListItemIcon>
-                <MailIcon />
-              </ListItemIcon>
-              <ListItemText primary={session?.name} />
-            </ListItemButton>
-          </ListItem>
+          <Tooltip key={index} title={session?.name} placement="right">
+            <ListItem key={index} disablePadding>
+              <ListItemButton
+                onClick={() => setSesson(session)}
+                selected={sesson.id === session.id}
+              >
+                <ListItemIcon>
+                  <MailIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={session?.name}
+                  sx={{
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Tooltip>
         ))}
       </List>
       <Divider />

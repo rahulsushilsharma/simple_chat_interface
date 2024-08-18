@@ -1,6 +1,7 @@
+import { MessageInterface, SessonInterface } from "../interfaces/Interfaces";
 
 
-function saveSessons(session: Record<string, string>[]) {
+function saveSessons(session: SessonInterface[]) {
   localStorage.setItem("sessons", JSON.stringify(session));
 }
 
@@ -14,7 +15,7 @@ function getSessons() {
 }
 }
 
-function saveChat(chatId: string, session: Record<string, string>[]) {
+function saveChat(chatId: string, session:MessageInterface[]) {
   localStorage.setItem(chatId, JSON.stringify(session));
 }
 

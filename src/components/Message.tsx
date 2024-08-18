@@ -40,49 +40,37 @@ function CustomSyntaxHighlighter(props: any) {
 
 function Message_(props: MessageInterface) {
   const { message, type } = props;
+  console.log(message, type);
   return (
-    <Paper sx={{ maxWidth: "94vw" }}>
-      {type == "assistant" ? (
-        <Box>
+    <Paper sx={{ overflow: "auto" }}>
+      <Box>
+        {type == "assistant" ? (
           <Avatar
-            sx={{ bgcolor: blue[500], alignSelf: "start" }}
+            sx={{ bgcolor: blue[500], alignSelf: "start", margin: "1em" }}
             variant="rounded"
           >
             AI
           </Avatar>
-
-          <Container>
-            <Markdown
-              children={message}
-              components={{
-                code(props) {
-                  return <CustomSyntaxHighlighter {...props} />;
-                },
-              }}
-            />
-            <span className="cursor"></span>
-          </Container>
-        </Box>
-      ) : (
-        <Box>
+        ) : (
           <Avatar
-            sx={{ bgcolor: green[500], alignSelf: "start" }}
+            sx={{ bgcolor: green[500], alignSelf: "start", margin: "1em" }}
             variant="rounded"
           >
             H
           </Avatar>
-          <Box padding="0 1em">
-            <Markdown
-              children={message}
-              components={{
-                code(props) {
-                  return <CustomSyntaxHighlighter {...props} />;
-                },
-              }}
-            />
-          </Box>
-        </Box>
-      )}
+        )}
+        <Container>
+          <Markdown
+            children={message}
+            components={{
+              code(props) {
+                return <CustomSyntaxHighlighter {...props} />;
+              },
+            }}
+          />
+          <span className="cursor"></span>
+        </Container>
+      </Box>
     </Paper>
   );
 }

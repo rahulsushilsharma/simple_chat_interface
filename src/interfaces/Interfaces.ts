@@ -3,7 +3,10 @@ interface MessageInterface {
   type: "assistant" | "user";
   message_sequence: number;
 }
-
+interface OllamaMessageInterface {
+  role: "assistant" | "user";
+  content: string;
+}
 interface CitationInterface {
   page_content: string;
   metadata: Record<string, unknown>;
@@ -14,4 +17,9 @@ interface SessonInterface {
   name: string;
 }
 
-export type { MessageInterface, CitationInterface, SessonInterface };
+export type {
+  MessageInterface,
+  OllamaMessageInterface,
+  CitationInterface,
+  SessonInterface,
+};
