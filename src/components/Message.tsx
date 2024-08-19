@@ -1,4 +1,11 @@
-import { Avatar, Box, Container, Paper, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Container,
+  IconButton,
+  Paper,
+  Typography,
+} from "@mui/material";
 import { blue, green } from "@mui/material/colors";
 import { memo } from "react";
 
@@ -7,6 +14,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 import { MessageInterface } from "../interfaces/Interfaces";
+import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function CustomSyntaxHighlighter(props: any) {
@@ -14,12 +22,26 @@ function CustomSyntaxHighlighter(props: any) {
   const match = /language-(\w+)/.exec(className || "");
   const language = match ? match[1] : "text";
   console.log(language, children, match);
+
+  function copyToClipboard() {
+    navigator.clipboard.writeText(String(children));
+  }
   return (
     <>
       {children?.includes("\n") ? (
         <Paper elevation={3}>
-          <Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "0 1em",
+            }}
+          >
             <Typography>{language}</Typography>
+            <IconButton onClick={copyToClipboard}>
+              <ContentPasteIcon fontSize="small" />
+            </IconButton>
           </Box>
           <SyntaxHighlighter
             {...rest}

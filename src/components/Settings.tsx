@@ -44,17 +44,16 @@ export default function SettingsDialog(props: {
     );
     console.log(models);
     setModels(models.models);
-    setUserSettings({
-      ...userSettings,
+    setContext({
+      temp: 0.7,
       model: models.models[0],
     });
-    console.log("model", models.models[0]);
-    setUserSettings({ ...userSettings, temp: 0.7 });
-    setTimeout(() => saveSettings(), 500);
+    setUserSettings({ model: models.models[0], temp: 0.7 });
   }
 
   useEffect(() => {
     getModels();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <>
@@ -70,7 +69,7 @@ export default function SettingsDialog(props: {
           {"User Settings"}
         </DialogTitle>
 
-        <DialogContent sx={{ height: "50dvh" }}>
+        <DialogContent sx={{ height: "30dvh" }}>
           <Box display="grid" gap="1em">
             <Box
               display="flex"

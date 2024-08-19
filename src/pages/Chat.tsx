@@ -1,13 +1,6 @@
 import { Box, Container, IconButton, Typography } from "@mui/material";
 
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import theme from "../theme";
 import { MessageList, Message } from "../components/Message";
@@ -21,6 +14,7 @@ import {
   OllamaMessageInterface,
   SessonInterface,
 } from "../interfaces/Interfaces";
+import { deleteSession } from "../utils/history";
 
 async function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -55,12 +49,8 @@ function Chat() {
 
   const [chatLength, setChatLength] = useState(0);
   const { context } = useContext(UserContext);
-  useEffect(() => {
-    console.log(context);
-  }, [context]);
 
   useEffect(() => {
-    console.log("<sesson>", sesson);
     if (sesson.id == "-1") {
       setMessages([]);
       return;
@@ -71,46 +61,12 @@ function Chat() {
     setChatLength(0);
   }, [sesson]);
 
-  const deleteSession = useCallback(function deleteSession(
-    sessionId: string,
-    sessions: SessonInterface[]
-  ) {
-    setSessons(
-      sessions.filter((session) => {
-        return session.id === sessionId;
-      })
-    );
-  },
-  []);
-
-  // const resize_ob = new ResizeObserver(function(entries) {
-  //   // since we are observing only a single element, so we access the first element in entries array
-  //   let rect = entries[0].contentRect;
-
-  //   // current width & height
-  //   let width = rect.width;
-  //   let height = rect.height;
-
-  //   console.log('Current Width : ' + width);
-  //   console.log('Current Height : ' + height);
-  // });
-
-  // useEffect(() => {
-  //   if (!msgRef.current) return;
-  //   const resizeObserver = new ResizeObserver(() => {
-  //     // Do what you want to do when the size of the element changes
-  //     console.log("changed",msgRef.current);
-  //   });
-  //   resizeObserver.observe(msgRef.current);
-  //   return () => resizeObserver.disconnect(); // clean up
-  // }, []);
   useEffect(() => {
     const sessons = getSessons();
     if (sessons) setSessons(sessons);
   }, []);
 
   useEffect(() => {
-    console.log("<Messages>", messages);
     saveChat(sesson.id, messages);
     setFilteredMessages(
       messages.map((m) => {
@@ -136,18 +92,14 @@ function Chat() {
       return [...prev, message];
     });
   }
-  //   function scrollToBottom() {
-  //     // Select the scrolling div
 
-  //     let scrollingDiv = msgRef.current;
-
-  // if(!scrollingDiv) return
-  //     // Scroll to the bottom
-  //     console.log(scrollingDiv, scrollingDiv.scrollHeight)
-
-  //     scrollingDiv.scrollTop = scrollingDiv.scrollHeight;
-  // }
-
+  function deleteSession_(id: string) {
+    const session = deleteSession(id);
+    if (session) {
+      setSessons(session);
+      setSesson({ id: "-1", name: "" });
+    }
+  }
   async function scrollToBottom() {
     if (!chatContainer.current) return;
     msgRef.current?.scrollIntoView({ behavior: "instant" });
@@ -166,23 +118,15 @@ function Chat() {
     });
     setChatLength(chatLength + 1);
     await delay(100);
-    console.log("messages", filteredMessages);
-    // const ollama = new Ollama({
-    //   baseUrl: "http://localhost:11434", // Default value
-    //   model: context?.model?.model, // Default value
-    //   temperature: context?.temp,
-    // });
 
     if (chatContainer.current)
       chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
-
-    // const stream = await ollama.stream(querry);
 
     const response = await fetch("http://localhost:11434/api/chat", {
       method: "POST",
       body: JSON.stringify({
         messages: [...filteredMessages, { role: "user", content: querry }],
-        // temperature: context?.temp,
+        temperature: context?.temp,
         model: context?.model?.model,
         stream: true,
       }),
@@ -221,11 +165,6 @@ function Chat() {
 
       await scrollToBottom();
     }
-    // for await (const chunk of stream) {
-    //   mes += chunk;
-    //   setMessage(mes);z
-    //   await scrollToBottom();
-    // }
 
     setStreaming(false);
     updateMessage({
@@ -248,7 +187,7 @@ function Chat() {
   const cachedSideBar = useMemo(
     () => (
       <Sidebar
-        deleteSession={deleteSession}
+        deleteSession={deleteSession_}
         setSesson={setSesson}
         sesson={sesson}
         sessons={sessons}
@@ -257,7 +196,7 @@ function Chat() {
         handleClose={handleDrawerClose}
       />
     ),
-    [sesson, sessons, isDrawerOpen, deleteSession]
+    [sesson, sessons, isDrawerOpen, drawerWidth]
   );
 
   return (

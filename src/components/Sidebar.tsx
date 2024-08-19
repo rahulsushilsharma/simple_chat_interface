@@ -10,24 +10,57 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import theme from "../theme";
-import { memo, useMemo, useState } from "react";
+import { memo, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsDialog from "./Settings";
-import { Tooltip } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { SessonInterface } from "../interfaces/Interfaces";
 
-export default memo(function Sidebar(props: any) {
-  const { open, handleClose, drawerWidth, setSesson, sesson, sessons } = props;
+interface SidebarProps {
+  open: boolean;
+  handleClose: () => void;
+  drawerWidth: number;
+  setSesson: React.Dispatch<React.SetStateAction<SessonInterface>>;
+  sesson: SessonInterface;
+  sessons: SessonInterface[];
+  deleteSession: (id: string) => void;
+}
+
+export default memo(function Sidebar(props: SidebarProps) {
+  const {
+    open,
+    handleClose,
+    drawerWidth,
+    setSesson,
+    sesson,
+    sessons,
+    deleteSession,
+  } = props;
   const [openSettings, setOpenSettings] = useState(false);
   console.log("sessons", sessons);
   const DrawerList = (
     <Box>
       <List sx={{ minHeight: "88dvh" }}>
-        {sessons?.map((session: Record<string, string>, index: number) => (
+        {sessons?.map((session, index: number) => (
           <Tooltip key={index} title={session?.name} placement="right">
-            <ListItem key={index} disablePadding>
+            <ListItem
+              key={index}
+              disablePadding
+              secondaryAction={
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => deleteSession(session?.id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              }
+            >
               <ListItemButton
                 onClick={() => setSesson(session)}
                 selected={sesson.id === session.id}
+                // adding delete button
               >
                 <ListItemIcon>
                   <MailIcon />
@@ -65,8 +98,6 @@ export default memo(function Sidebar(props: any) {
     </Box>
   );
 
-  const Cached = useMemo(() => DrawerList, [sessons, sesson.id]);
-
   return (
     <div>
       <Drawer
@@ -102,8 +133,7 @@ export default memo(function Sidebar(props: any) {
             <MenuIcon />
           </Button>
         </Box>
-        {Cached}
-        {/* {DrawerList} */}
+        {DrawerList}
       </Drawer>
       <SettingsDialog openState={[openSettings, setOpenSettings]} />
     </div>
