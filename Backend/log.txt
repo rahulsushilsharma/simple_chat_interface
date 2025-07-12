@@ -1,0 +1,12 @@
+2025-07-13 01:21:29,119 watchfiles.main DEBUG 1 change detected: {(<Change.modified: 2>, 'D:\\dev\\open_projects\\simple_chat_interface\\backend\\log.txt')}
+2025-07-13 01:21:29,478 watchfiles.main DEBUG 1 change detected: {(<Change.modified: 2>, 'D:\\dev\\open_projects\\simple_chat_interface\\backend\\log.txt')}
+2025-07-13 01:21:29,836 watchfiles.main DEBUG 1 change detected: {(<Change.modified: 2>, 'D:\\dev\\open_projects\\simple_chat_interface\\backend\\log.txt')}
+2025-07-13 01:21:30,194 watchfiles.main DEBUG 1 change detected: {(<Change.modified: 2>, 'D:\\dev\\open_projects\\simple_chat_interface\\backend\\log.txt')}
+2025-07-13 01:21:30,552 watchfiles.main DEBUG 1 change detected: {(<Change.modified: 2>, 'D:\\dev\\open_projects\\simple_chat_interface\\backend\\log.txt')}
+2025-07-13 01:21:30,909 watchfiles.main DEBUG 1 change detected: {(<Change.modified: 2>, 'D:\\dev\\open_projects\\simple_chat_interface\\backend\\log.txt')}
+2025-07-13 01:21:31,267 watchfiles.main DEBUG 1 change detected: {(<Change.modified: 2>, 'D:\\dev\\open_projects\\simple_chat_interface\\backend\\log.txt')}
+2025-07-13 01:21:31,525 uvicorn.error INFO Shutting down
+2025-07-13 01:21:31,633 uvicorn.error INFO Waiting for application shutdown.
+2025-07-13 01:21:31,635 uvicorn.error INFO Application shutdown complete.
+2025-07-13 01:21:31,636 uvicorn.error INFO Finished server process [30052]
+2025-07-13 01:21:31,778 uvicorn.error INFO Stopping reloader process [20940]
