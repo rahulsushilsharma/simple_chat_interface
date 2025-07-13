@@ -6,7 +6,7 @@ import utils
 import utils.custom_httpx
 from models.models import Base
 from database.database import db_engine
-from routes import user
+from routes import user, chats, session
 
 
 setup_logging()
@@ -34,3 +34,5 @@ app.add_middleware(
 )
 
 app.include_router(user.router)
+app.include_router(chats.router)
+app.include_router(session.router)

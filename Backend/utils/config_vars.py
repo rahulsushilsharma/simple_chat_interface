@@ -1,3 +1,3 @@
-REQUEST_TIMEOUT = 5
+REQUEST_TIMEOUT = 20
 
 DATABASE_URL = "sqlite:///.database.db"

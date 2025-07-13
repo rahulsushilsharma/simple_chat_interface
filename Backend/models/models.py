@@ -1,4 +1,4 @@
-from sqlalchemy import String, Column, Integer, ForeignKey
+from sqlalchemy import String, Column, Integer, ForeignKey, Float
 from sqlalchemy.orm import relationship
 from database.database import Base
 
@@ -19,7 +19,8 @@ class Session(Base):
     id = Column(Integer, primary_key=True, index=True)
     session_name = Column(String)
     session_type = Column(String)
-    model = Column(String)
+    model_name = Column(String)
+    temperature = Column(Float)
 
     user_id = Column(Integer, ForeignKey("user.id"))
     owner = relationship("Users", back_populates="sessions")
@@ -32,7 +33,6 @@ class ChatHistory(Base):
     id = Column(Integer, primary_key=True, index=True)
     message = Column(String)
     message_type = Column(String)
-    model = Column(String)
 
     session_id = Column(Integer, ForeignKey("session.id"))
     owner = relationship("Session", back_populates="history")

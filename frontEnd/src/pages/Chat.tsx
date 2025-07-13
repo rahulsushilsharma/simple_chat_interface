@@ -1,20 +1,19 @@
 import { Box, Container, IconButton, Typography } from "@mui/material";
 
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import Sidebar from "../components/Sidebar";
-import theme from "../theme";
-import { MessageList, Message } from "../components/Message";
-import UserInput from "../components/UserInput";
-import { v4 as uuidv4 } from "uuid";
-import { getChat, getSessons, saveChat, saveSessons } from "../utils/history";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { Message, MessageList } from "../components/Message";
+import Sidebar from "../components/Sidebar";
 import { UserContext } from "../components/UserContextProvider";
+import UserInput from "../components/UserInput";
 import {
   MessageInterface,
   OllamaMessageInterface,
   SessonInterface,
 } from "../interfaces/Interfaces";
-import { deleteSession } from "../utils/history";
+import theme from "../theme";
+import { deleteSession, getChat, getSessons, saveChat, saveSessons } from "../utils/history";
 
 async function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -122,15 +121,19 @@ function Chat() {
     if (chatContainer.current)
       chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
 
-    const response = await fetch("http://localhost:11434/api/chat", {
+    const response = await fetch("http://localhost:8000/chat/chat", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
       body: JSON.stringify({
-        messages: [...filteredMessages, { role: "user", content: querry }],
-        temperature: context?.temp,
-        model: context?.model?.model,
-        stream: true,
+        "session_id": 1,
+        "message_type": "string",
+        "message": "string"
       }),
     });
+
 
     const stream = response.body
       ?.pipeThrough(new TextDecoderStream())
