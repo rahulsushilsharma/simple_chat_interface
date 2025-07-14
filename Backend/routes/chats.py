@@ -12,7 +12,7 @@ router = APIRouter(prefix="/chat", tags=["chats"])
 client = CustomHttpx()
 
 
-@router.get("/get_chat", response_model=list[chat.ChatInput])
+@router.get("/get_chat", response_model=list[chat.ChatOutput])
 def get_chat(session_id: int, db: Session = Depends(get_db)):
 
     return db.query(models.ChatHistory).filter(
@@ -29,26 +29,52 @@ def add_chats(chat: chat.ChatInput, db: Session):
 
 
 @router.post("/chat", response_model=chat.ChatOutput)
-async def chats(chat: chat.ChatInput, db: Session = Depends(get_db)):
-    chat = add_chats(chat, db)
+async def chats(user_chat: chat.ChatInput, db: Session = Depends(get_db)):
+    add_chats(user_chat, db)
+    chats = get_chat(user_chat.session_id, db)
 
-    return StreamingResponse(call_ollama_api(chat), media_type="text/stream")
+    content = ""
+
+    async def call_ollama_api():
+        ollama_chats = db_to_ollama(chats=chats)
+        nonlocal content
+        body = json.dumps(
+            {
+                "messages": ollama_chats,
+                "temperature": chats[0].owner.temperature,
+                "model": chats[0].owner.model_name,
+                "stream": True,
+            }
+        )
+        print(body)
+        async with client.stream(
+            "POST",
+            "http://localhost:11434/api/chat",
+            content=body,
+        ) as response:
+            async for chunk in response.aiter_lines():
+                data = json.loads(chunk)
+                content += data["message"]["content"]
+                print(content)
+
+                yield chunk
+            yield content
+            data = chat.ChatInput(
+                session_id=user_chat.session_id,
+                message_type="assistant",
+                message=content,
+            )
+            add_chats(data, db)
+
+    return StreamingResponse(call_ollama_api(), media_type="text/stream")
 
 
-async def call_ollama_api(chat: chat.ChatInput):
-    body = json.dumps(
-        {
-            "messages": [{"role": "user", "content": "hi"}],
-            "temperature": 0,
-            "model": "gemma3n:latest",
-            "stream": True,
-        }
-    )
-    async with client.stream(
-        "POST",
-        "http://localhost:11434/api/chat",
-        content=body,
-    ) as response:
-        async for chunk in response.aiter_lines():
-            print(chunk)
-            yield chunk
+def db_to_ollama(chats: list[chat.ChatInput]):
+    ollama_chats = []
+    for chat_ in chats:
+        temp_chat = {}
+        temp_chat["role"] = chat_.message_type
+        temp_chat["content"] = chat_.message
+        ollama_chats.append(temp_chat)
+
+    return ollama_chats

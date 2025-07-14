@@ -1,21 +1,21 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import MailIcon from "@mui/icons-material/Mail";
+import MenuIcon from "@mui/icons-material/Menu";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import { IconButton, Tooltip } from "@mui/material";
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
-import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import theme from "../theme";
-import { memo, useState } from "react";
-import MenuIcon from "@mui/icons-material/Menu";
-import SettingsDialog from "./Settings";
-import { IconButton, Tooltip } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { useState } from "react";
 import { SessonInterface } from "../interfaces/Interfaces";
+import theme from "../theme";
+import SettingsDialog from "./Settings";
 
 interface SidebarProps {
   open: boolean;
@@ -27,7 +27,7 @@ interface SidebarProps {
   deleteSession: (id: string) => void;
 }
 
-export default memo(function Sidebar(props: SidebarProps) {
+export default function Sidebar(props: SidebarProps) {
   const {
     open,
     handleClose,
@@ -60,7 +60,7 @@ export default memo(function Sidebar(props: SidebarProps) {
               <ListItemButton
                 onClick={() => setSesson(session)}
                 selected={sesson.id === session.id}
-                // adding delete button
+              // adding delete button
               >
                 <ListItemIcon>
                   <MailIcon />
@@ -138,4 +138,4 @@ export default memo(function Sidebar(props: SidebarProps) {
       <SettingsDialog openState={[openSettings, setOpenSettings]} />
     </div>
   );
-});
+}

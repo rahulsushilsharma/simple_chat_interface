@@ -2,7 +2,6 @@ import { Box, Container, IconButton, Typography } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { Message, MessageList } from "../components/Message";
 import Sidebar from "../components/Sidebar";
 import { UserContext } from "../components/UserContextProvider";
@@ -13,7 +12,7 @@ import {
   SessonInterface,
 } from "../interfaces/Interfaces";
 import theme from "../theme";
-import { deleteSession, getChat, getSessons, saveChat, saveSessons } from "../utils/history";
+import { deleteSession, getChat, saveChat, saveSessons } from "../utils/history";
 
 async function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -60,9 +59,17 @@ function Chat() {
     setChatLength(0);
   }, [sesson]);
 
+
+  async function getApiSessions() {
+    const session = await fetch("http://localhost:8000/session/session")
+    const data = await session.json()
+    console.log(data.map((ele: { id: string; session_name: string; }) => { return { id: ele.id, name: ele.session_name } }))
+    setSessons(data.map((ele: { id: string; session_name: string; }) => { return { id: ele.id, name: ele.session_name } }))
+  }
   useEffect(() => {
-    const sessons = getSessons();
-    if (sessons) setSessons(sessons);
+    // const sessons = getSessons();
+    getApiSessions()
+    // if (sessons) setSessons(sessons);
   }, []);
 
   useEffect(() => {
@@ -74,12 +81,20 @@ function Chat() {
     );
   }, [messages, sesson.id]);
 
-  function createSesson(name: string) {
-    const sessonId = uuidv4();
-    const sesson = {
-      id: sessonId,
-      name: name,
-    };
+  async function createSesson(name: string, session_type: string) {
+    // const sessonId = uuidv4();
+    const session_body = JSON.stringify({
+      "user_id": 2,
+      "temperature": 0,
+      "session_name": name,
+      "session_type": session_type,
+      "model_name": "gemma3n:latest"
+    })
+    const sesson_res = await fetch("http://localhost:8000/session/create_session", {
+      method: "POST",
+      body: session_body
+    })
+    const sesson = await sesson_res.json()
 
     setSesson(sesson);
     setSessons((prev) => [...prev, sesson]);
@@ -106,7 +121,7 @@ function Chat() {
 
   async function handleSubmit(querry: string) {
     if (sesson.id == "-1") {
-      createSesson(querry);
+      createSesson(querry, "chat");
     }
 
     setStreaming(true);
@@ -128,9 +143,9 @@ function Chat() {
         "Accept": "application/json",
       },
       body: JSON.stringify({
-        "session_id": 1,
-        "message_type": "string",
-        "message": "string"
+        "session_id": 11,
+        "message_type": "user",
+        "message": querry
       }),
     });
 
@@ -223,7 +238,15 @@ function Chat() {
             <MenuIcon />
           </IconButton>
         )}
-        {cachedSideBar}
+        {<Sidebar
+          deleteSession={deleteSession_}
+          setSesson={setSesson}
+          sesson={sesson}
+          sessons={sessons}
+          open={isDrawerOpen}
+          drawerWidth={drawerWidth}
+          handleClose={handleDrawerClose}
+        />}
 
         <Box
           display="flex"
