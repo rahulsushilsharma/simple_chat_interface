@@ -10,13 +10,16 @@ router = APIRouter(prefix="/session", tags=["session"])
 
 
 @router.get("/session", response_model=list[SessionOut])
-def get_session(limit: int = None, db: Session = Depends(get_db)):
+def get_session(user_id: int, limit: int = None, db: Session = Depends(get_db)):
     if limit:
         return (
-            db.query(models.Session).limit(limit=limit).order_by(asc(models.Session.id))
+            db.query(models.Session)
+            .filter(models.Session.user_id == user_id)
+            .limit(limit=limit)
+            .order_by(asc(models.Session.id))
         )
     else:
-        return db.query(models.Session).all()
+        return db.query(models.Session).filter(models.Session.user_id == user_id).all()
 
 
 @router.post("/create_session", response_model=SessionOut)

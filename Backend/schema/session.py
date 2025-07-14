@@ -18,7 +18,7 @@ class SessionOut(BaseModel):
     session_name: str
     session_type: str
     model_name: str
-    owner: Optional[user.UserCreate]
+    owner: Optional[user.UserOut]
 
     class Config:
         from_attributes = True

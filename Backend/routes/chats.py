@@ -58,7 +58,14 @@ async def chats(user_chat: chat.ChatInput, db: Session = Depends(get_db)):
                 print(content)
 
                 yield chunk
-            yield content
+            yield json.dumps(
+                {
+                    "model": "gemma3n:latest",
+                    "created_at": "2025-07-14T13:58:12.771225Z",
+                    "message": {"role": "assistant", "content": "content"},
+                    "done": True,
+                }
+            )
             data = chat.ChatInput(
                 session_id=user_chat.session_id,
                 message_type="assistant",

@@ -12,7 +12,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { SessonInterface } from "../interfaces/Interfaces";
 import theme from "../theme";
 import SettingsDialog from "./Settings";
@@ -27,7 +27,7 @@ interface SidebarProps {
   deleteSession: (id: string) => void;
 }
 
-export default function Sidebar(props: SidebarProps) {
+export default memo(function Sidebar(props: SidebarProps) {
   const {
     open,
     handleClose,
@@ -138,4 +138,4 @@ export default function Sidebar(props: SidebarProps) {
       <SettingsDialog openState={[openSettings, setOpenSettings]} />
     </div>
   );
-}
+});
