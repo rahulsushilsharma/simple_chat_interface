@@ -11,6 +11,7 @@ class Users(Base):
     email = Column(String, unique=True, index=True)
 
     sessions = relationship("Session", back_populates="owner")
+    file = relationship("File", back_populates="owner")
 
 
 class Session(Base):
@@ -21,10 +22,11 @@ class Session(Base):
     session_type = Column(String)
     model_name = Column(String)
     temperature = Column(Float)
-
+    file_id = Column(String)
     user_id = Column(Integer, ForeignKey("user.id"))
     owner = relationship("Users", back_populates="sessions")
     history = relationship("ChatHistory", back_populates="owner")
+    files = Column(String)
 
 
 class ChatHistory(Base):
@@ -36,3 +38,30 @@ class ChatHistory(Base):
 
     session_id = Column(Integer, ForeignKey("session.id"))
     owner = relationship("Session", back_populates="history")
+    citation = relationship("Citation", back_populates="owner")
+
+
+class File(Base):
+    __tablename__ = "file"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("user.id"))
+    md5 = Column(String)
+    file_name = Column(String)
+    file_type = Column(String)
+    file_path = Column(String)
+    chunking_status = Column(String, nullable=True)
+    embedding_status = Column(String, nullable=True)
+    owner = relationship("Users", back_populates="file")
+
+
+class Citation(Base):
+    __tablename__ = "citation"
+
+    id = Column(Integer, primary_key=True, index=True)
+    citation = Column(String)
+    file_name = Column(String)
+    file_id = Column(Integer)
+    chat_id = Column(Integer, ForeignKey("chat_history.id"))
+
+    owner = relationship("ChatHistory", back_populates="citation")

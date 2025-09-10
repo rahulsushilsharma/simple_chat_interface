@@ -9,6 +9,7 @@ class SessionInput(BaseModel):
     session_name: str
     session_type: str
     model_name: str
+    files: Optional[str]
 
 
 class SessionOut(BaseModel):
@@ -18,7 +19,12 @@ class SessionOut(BaseModel):
     session_name: str
     session_type: str
     model_name: str
+    files: Optional[str]
     owner: Optional[user.UserOut]
 
     class Config:
         from_attributes = True
+
+
+class JsonResponse(BaseModel):
+    message: str

@@ -12,7 +12,7 @@ import {
   SessonInterface,
 } from "../interfaces/Interfaces";
 import theme from "../theme";
-import { deleteSession, saveSessons } from "../utils/history";
+import { saveSessons } from "../utils/history";
 
 async function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -59,7 +59,7 @@ function Chat() {
 
 
   async function getApiSessions() {
-    const session = await fetch("http://localhost:8000/session/session?user_id=2")
+    const session = await fetch("http://localhost:8000/session/session?user_id=1")
     const data = await session.json()
     console.log(data.map((ele: { id: string; session_name: string; }) => { return { id: ele.id, name: ele.session_name } }))
     setSessons(data.map((ele: { id: string; session_name: string; }) => { return { id: ele.id, name: ele.session_name } }))
@@ -92,11 +92,12 @@ function Chat() {
   async function createSesson(name: string, session_type: string) {
     // const sessonId = uuidv4();
     const session_body = JSON.stringify({
-      "user_id": 2,
+      "user_id": 1,
       "temperature": 0,
       "session_name": name,
       "session_type": session_type,
-      "model_name": "gemma3n:latest"
+      "model_name": "goekdenizguelmez/JOSIEFIED-Qwen3:0.6b",
+      "files": ""
     })
     const sesson_res = await fetch("http://localhost:8000/session/create_session", {
       headers: {
@@ -120,12 +121,18 @@ function Chat() {
     });
   }
 
+  async function deleteSession(session_id: string) {
+    await fetch(`http://localhost:8000/session/delete_session?session_id=${session_id}`, {
+      method: "DELETE"
+    })
+
+  }
+
   function deleteSession_(id: string) {
-    const session = deleteSession(id);
-    if (session) {
-      setSessons(session);
-      setSesson({ id: "-1", name: "" });
-    }
+    deleteSession(id);
+    setSessons(prev => prev.filter(ele => ele.id !== id));
+    setSesson({ id: "-1", name: "" });
+
   }
   async function scrollToBottom() {
     if (!chatContainer.current) return;
@@ -154,7 +161,7 @@ function Chat() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json",
+        "Accept": "text/event-stream",
       },
       body: JSON.stringify({
         "session_id": session.id,

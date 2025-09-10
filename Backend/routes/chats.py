@@ -73,7 +73,7 @@ async def chats(user_chat: chat.ChatInput, db: Session = Depends(get_db)):
             )
             add_chats(data, db)
 
-    return StreamingResponse(call_ollama_api(), media_type="text/stream")
+    return StreamingResponse(call_ollama_api(), media_type="text/event-stream")
 
 
 def db_to_ollama(chats: list[chat.ChatInput]):
