@@ -1,3 +1,11 @@
 frontEnd/node_modules
 .venv
 user_files
+Backend/__pycache__/
+Backend/venv/
+Backend/cookies/
+Backend/.database.db
+*.sqlite3
+*.db
+*.txt
+*.log
