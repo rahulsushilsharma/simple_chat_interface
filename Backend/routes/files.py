@@ -33,7 +33,7 @@ async def create_hash(file: UploadFile):
     return md5_hash.hexdigest()
 
 
-async def write_file(file: File, file_path: str):
+async def write_file(file: UploadFile, file_path: str):
     with open(file_path, "wb") as out_file:
         while chunk := await file.read(8192):
             out_file.write(chunk)
@@ -43,7 +43,8 @@ async def write_file(file: File, file_path: str):
 async def upload_file(
     user_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)
 ):
-
+    if not file.filename:
+        file.filename = ""
     file_hash = await create_hash(file)
     file_path = FILE_URL + "/" + file_hash + "." + file.filename.split(".")[-1]
 
@@ -54,7 +55,7 @@ async def upload_file(
     else:
         # BackgroundTasks.add_task(write_file, file, file_path)
 
-        write_file(file, file_path)
+        await write_file(file, file_path)
         file_data = FileInput(
             file_name=file.filename,
             file_path=file_path,
@@ -72,4 +73,6 @@ async def upload_file(
 @router.get("list_doc_data")
 def doc_data(file_id: int, db: Session = Depends(get_db)):
     file = db.query(models.File).filter(models.File.id == file_id).first()
-    return load_files(file.file_path)
+    if not file:
+        return HTTPException(404, "file not found")
+    return load_files(str(file.file_name))

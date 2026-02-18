@@ -15586,3 +15586,175 @@ WHERE chat_history.id = ?
 2025-09-10 23:31:22,253 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
 2025-09-10 23:31:22,253 sqlalchemy.engine.Engine INFO [raw sql] ()
 2025-09-10 23:31:22,254 sqlalchemy.engine.Engine INFO COMMIT
+2026-02-18 10:28:02,174 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:28:02,175 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-02-18 10:28:02,175 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:28:02,180 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-02-18 10:28:02,180 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:28:02,181 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-02-18 10:28:02,181 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:28:02,182 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-02-18 10:28:02,182 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:28:02,183 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-02-18 10:28:02,183 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:28:02,184 sqlalchemy.engine.Engine INFO COMMIT
+2026-02-18 10:33:30,834 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:33:30,836 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-02-18 10:33:30,836 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:33:30,838 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-02-18 10:33:30,838 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:33:30,840 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-02-18 10:33:30,840 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:33:30,841 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-02-18 10:33:30,843 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:33:30,844 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-02-18 10:33:30,844 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:33:30,845 sqlalchemy.engine.Engine INFO COMMIT
+2026-02-18 10:33:43,158 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:33:43,161 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user
+2026-02-18 10:33:43,161 sqlalchemy.engine.Engine INFO [generated in 0.00057s] ()
+2026-02-18 10:33:43,164 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-02-18 10:34:02,353 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:34:02,357 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-02-18 10:34:02,361 sqlalchemy.engine.Engine INFO [generated in 0.00460s] (1,)
+2026-02-18 10:34:02,377 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-02-18 10:34:02,378 sqlalchemy.engine.Engine INFO [generated in 0.00100s] (1,)
+2026-02-18 10:34:02,379 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-02-18 10:34:23,963 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:34:23,965 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-02-18 10:34:23,973 sqlalchemy.engine.Engine INFO [generated in 0.00697s] (3,)
+2026-02-18 10:34:23,980 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+2026-02-18 10:34:23,981 sqlalchemy.engine.Engine INFO [generated in 0.00110s] (3,)
+2026-02-18 10:34:23,985 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-02-18 10:34:55,269 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:34:55,272 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-02-18 10:34:55,272 sqlalchemy.engine.Engine INFO [generated in 0.00068s] ('string', 'user', 3)
+2026-02-18 10:34:55,276 sqlalchemy.engine.Engine INFO COMMIT
+2026-02-18 10:34:55,286 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:34:55,288 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-02-18 10:34:55,288 sqlalchemy.engine.Engine INFO [generated in 0.00105s] (14,)
+2026-02-18 10:34:55,290 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-02-18 10:34:55,290 sqlalchemy.engine.Engine INFO [cached since 31.33s ago] (3,)
+2026-02-18 10:34:55,292 root ERROR Error getting db session : 'ChatHistory' object has no attribute 'ChatOutput'
+2026-02-18 10:34:55,292 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-02-18 10:37:28,359 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:37:28,360 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-02-18 10:37:28,360 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:37:28,361 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-02-18 10:37:28,361 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:37:28,363 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-02-18 10:37:28,364 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:37:28,364 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-02-18 10:37:28,365 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:37:28,366 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-02-18 10:37:28,366 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:37:28,366 sqlalchemy.engine.Engine INFO COMMIT
+2026-02-18 10:37:29,007 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:37:29,010 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-02-18 10:37:29,011 sqlalchemy.engine.Engine INFO [generated in 0.00086s] ('string', 'user', 3)
+2026-02-18 10:37:29,014 sqlalchemy.engine.Engine INFO COMMIT
+2026-02-18 10:37:29,026 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:37:29,031 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-02-18 10:37:29,031 sqlalchemy.engine.Engine INFO [generated in 0.00068s] (15,)
+2026-02-18 10:37:29,036 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-02-18 10:37:29,036 sqlalchemy.engine.Engine INFO [generated in 0.00097s] (3,)
+2026-02-18 10:37:29,040 root ERROR Error getting db session : schema.chat.ChatOutput() argument after ** must be a mapping, not ChatHistory
+2026-02-18 10:37:29,040 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-02-18 10:37:50,314 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:37:50,315 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-02-18 10:37:50,315 sqlalchemy.engine.Engine INFO [cached since 21.31s ago] ('string', 'user', 3)
+2026-02-18 10:37:50,320 sqlalchemy.engine.Engine INFO COMMIT
+2026-02-18 10:37:50,331 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:37:50,332 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-02-18 10:37:50,332 sqlalchemy.engine.Engine INFO [cached since 21.3s ago] (16,)
+2026-02-18 10:37:50,335 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-02-18 10:37:50,336 sqlalchemy.engine.Engine INFO [cached since 21.3s ago] (3,)
+2026-02-18 10:37:50,337 root ERROR Error getting db session : schema.chat.ChatOutput() argument after ** must be a mapping, not ChatHistory
+2026-02-18 10:37:50,338 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-02-18 10:39:37,767 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:39:37,767 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-02-18 10:39:37,768 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:39:37,769 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-02-18 10:39:37,769 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:39:37,771 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-02-18 10:39:37,771 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:39:37,772 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-02-18 10:39:37,772 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:39:37,773 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-02-18 10:39:37,773 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:39:37,774 sqlalchemy.engine.Engine INFO COMMIT
+2026-02-18 10:40:21,356 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:40:21,356 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-02-18 10:40:21,357 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:40:21,358 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-02-18 10:40:21,359 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:40:21,360 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-02-18 10:40:21,360 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:40:21,361 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-02-18 10:40:21,361 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:40:21,362 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-02-18 10:40:21,362 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:40:21,363 sqlalchemy.engine.Engine INFO COMMIT
+2026-02-18 10:40:35,315 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:40:35,318 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-02-18 10:40:35,318 sqlalchemy.engine.Engine INFO [generated in 0.00060s] ('string', 'user', 3)
+2026-02-18 10:40:35,323 sqlalchemy.engine.Engine INFO COMMIT
+2026-02-18 10:40:35,335 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:40:35,340 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-02-18 10:40:35,342 sqlalchemy.engine.Engine INFO [generated in 0.00076s] (17,)
+2026-02-18 10:40:35,345 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-02-18 10:40:35,345 sqlalchemy.engine.Engine INFO [generated in 0.00091s] (3,)
+2026-02-18 10:40:35,347 root ERROR Error getting db session : the JSON object must be str, bytes or bytearray, not ChatHistory
+2026-02-18 10:40:35,348 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-02-18 10:45:01,745 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:45:01,745 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-02-18 10:45:01,745 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:45:01,745 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-02-18 10:45:01,745 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:45:01,760 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-02-18 10:45:01,760 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:45:01,762 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-02-18 10:45:01,762 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:45:01,763 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-02-18 10:45:01,763 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 10:45:01,764 sqlalchemy.engine.Engine INFO COMMIT
+2026-02-18 10:45:18,151 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:45:18,154 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-02-18 10:45:18,154 sqlalchemy.engine.Engine INFO [generated in 0.00067s] ('string', 'user', 3)
+2026-02-18 10:45:18,159 sqlalchemy.engine.Engine INFO COMMIT
+2026-02-18 10:45:18,170 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 10:45:18,176 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-02-18 10:45:18,177 sqlalchemy.engine.Engine INFO [generated in 0.00120s] (18,)
+2026-02-18 10:45:18,181 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-02-18 10:45:18,181 sqlalchemy.engine.Engine INFO [generated in 0.00086s] (3,)
+2026-02-18 10:45:18,181 root ERROR Error getting db session : Object of type ChatHistory is not JSON serializable
+2026-02-18 10:45:18,181 sqlalchemy.engine.Engine INFO ROLLBACK

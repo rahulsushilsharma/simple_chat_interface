@@ -15,8 +15,10 @@ client = CustomHttpx()
 @router.get("/get_chat", response_model=list[chat.ChatOutput])
 def get_chat(session_id: int, db: Session = Depends(get_db)):
 
-    return db.query(models.ChatHistory).filter(
-        models.ChatHistory.session_id == session_id
+    return (
+        db.query(models.ChatHistory)
+        .filter(models.ChatHistory.session_id == session_id)
+        .all()
     )
 
 
@@ -32,11 +34,12 @@ def add_chats(chat: chat.ChatInput, db: Session):
 async def chats(user_chat: chat.ChatInput, db: Session = Depends(get_db)):
     add_chats(user_chat, db)
     chats = get_chat(user_chat.session_id, db)
+    chat_output = [chat.ChatOutput(**json.loads(json.dumps(c))) for c in chats]
 
     content = ""
 
     async def call_ollama_api():
-        ollama_chats = db_to_ollama(chats=chats)
+        ollama_chats = db_to_ollama(chats=chat_output)
         nonlocal content
         body = json.dumps(
             {
@@ -76,7 +79,7 @@ async def chats(user_chat: chat.ChatInput, db: Session = Depends(get_db)):
     return StreamingResponse(call_ollama_api(), media_type="text/event-stream")
 
 
-def db_to_ollama(chats: list[chat.ChatInput]):
+def db_to_ollama(chats: list[chat.ChatOutput]):
     ollama_chats = []
     for chat_ in chats:
         temp_chat = {}

@@ -11,8 +11,9 @@ class CustomHttpx(httpx.AsyncClient):
         self.raise_for_status = raise_for_status
 
     async def request(self, *args, **kwargs):
+        start_time = time.time()
+
         try:
-            start_time = time.time()
 
             if len(args) > 1:
                 logging.info(f"Performing external {args[0]} request to : {args[1]}")
