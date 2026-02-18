@@ -1,6 +1,6 @@
-from sqlalchemy import String, Column, Integer, ForeignKey, Float
-from sqlalchemy.orm import relationship
 from database.database import Base
+from sqlalchemy import Column, Float, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 
 
 class Users(Base):

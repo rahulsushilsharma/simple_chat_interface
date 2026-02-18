@@ -10,3 +10,15 @@
 2025-07-13 01:21:31,635 uvicorn.error INFO Application shutdown complete.
 2025-07-13 01:21:31,636 uvicorn.error INFO Finished server process [30052]
 2025-07-13 01:21:31,778 uvicorn.error INFO Stopping reloader process [20940]
+2026-02-18 17:10:00,772 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-02-18 17:10:00,772 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-02-18 17:10:00,774 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 17:10:00,783 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-02-18 17:10:00,783 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 17:10:00,784 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-02-18 17:10:00,785 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 17:10:00,786 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-02-18 17:10:00,786 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 17:10:00,787 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-02-18 17:10:00,788 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-02-18 17:10:00,789 sqlalchemy.engine.Engine INFO COMMIT
