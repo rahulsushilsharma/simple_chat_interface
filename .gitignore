@@ -10,7 +10,7 @@ Thumbs.db
 .env.*
 !.env.example
 *pyc
-
+*.txt
 # =========================
 # NODE / FRONTEND (React)
 # =========================

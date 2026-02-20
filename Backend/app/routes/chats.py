@@ -1,4 +1,5 @@
 import json
+from collections.abc import AsyncGenerator
 
 from database.database import get_db
 from fastapi import APIRouter, Depends, HTTPException
@@ -48,15 +49,23 @@ async def chats(user_chat: chat.ChatInput, db: Session = Depends(get_db)):
         content = ""
         chat_schema = [chat.ChatOutput.model_validate(c) for c in chats]
 
-        async def call_ollama_api():
+        async def call_ollama_api() -> AsyncGenerator[str, None]:
             nonlocal content
 
             async for chunk in chat_langchain(
                 model_name=str(cur_session.model_name), history=chat_schema
             ):
                 content += str(chunk.content)
-
-                yield chunk
+                try:
+                    yield chunk.model_dump_json()
+                except Exception as ex:
+                    yield f"error {ex}"
+            data = chat.ChatInput(
+                session_id=user_chat.session_id,
+                message_type="assistant",
+                message=content,
+            )
+            add_chats(data, db)
             yield json.dumps(
                 {
                     "model": "gemma3n:latest",
@@ -65,12 +74,6 @@ async def chats(user_chat: chat.ChatInput, db: Session = Depends(get_db)):
                     "done": True,
                 }
             )
-            data = chat.ChatInput(
-                session_id=user_chat.session_id,
-                message_type="assistant",
-                message=content,
-            )
-            add_chats(data, db)
 
         return StreamingResponse(call_ollama_api(), media_type="text/event-stream")
     except Exception as e:
