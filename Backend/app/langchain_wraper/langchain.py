@@ -31,3 +31,7 @@ async def chat_langchain(model_name: str, history: list[ChatOutput]):
     # Use astream() for async
     async for chunk in model.astream(messages):
         yield chunk
+
+
+async def rag_chat(model_name: str, history: list[ChatOutput]):
+    pass
