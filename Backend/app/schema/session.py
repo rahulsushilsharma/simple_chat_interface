@@ -1,5 +1,7 @@
 from typing import Optional
+
 from pydantic import BaseModel
+
 from schema import user
 
 
@@ -10,6 +12,9 @@ class SessionInput(BaseModel):
     session_type: str
     model_name: str
     files: Optional[str]
+
+    class Config:
+        from_attributes = True
 
 
 class SessionOut(BaseModel):
@@ -28,3 +33,6 @@ class SessionOut(BaseModel):
 
 class JsonResponse(BaseModel):
     message: str
+
+    class Config:
+        from_attributes = True

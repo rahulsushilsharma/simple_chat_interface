@@ -10,6 +10,9 @@ class FileInput(BaseModel):
     chunking_status: str
     embedding_status: str
 
+    class Config:
+        from_attributes = True
+
 
 class FileOut(BaseModel):
     id: int

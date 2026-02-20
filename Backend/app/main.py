@@ -1,13 +1,12 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 import httpx
-from globel_logger.logging import setup_logging
 import utils
 import utils.custom_httpx
-from models.models import Base
 from database.database import db_engine
-from routes import user, chats, session, files
-
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from globel_logger.logging import setup_logging
+from models.models import Base
+from routes import chats, files, metadata, session, user
 
 setup_logging()
 Base.metadata.create_all(db_engine)
@@ -37,3 +36,4 @@ app.include_router(user.router)
 app.include_router(chats.router)
 app.include_router(session.router)
 app.include_router(files.router)
+app.include_router(metadata.router)
