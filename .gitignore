@@ -1,3 +1,114 @@
+# =========================
+# GENERAL
+# =========================
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.env
+.env.*
+!.env.example
+*pyc
+
+# =========================
+# NODE / FRONTEND (React)
+# =========================
+node_modules/
+frontEnd/node_modules/
+dist/
+build/
+.next/
+out/
+coverage/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Vite / React
+.vite
+*.tsbuildinfo
+
+# =========================
+# PYTHON BACKEND
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+Backend/venv/
+Backend/.venv/
+
+# Python cache & tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# =========================
+# DATABASES
+# =========================
+*.sqlite3
+*.db
+*.db-journal
+Backend/.database.db
+
+# =========================
+# AI / USER GENERATED FILES
+# =========================
+user_files/
+uploads/
+generated_images/
+embeddings/
+vectorstore/
+chroma/
+faiss_index/
+
+# =========================
+# COOKIES / SESSIONS
+# =========================
+Backend/cookies/
+sessions/
+
+# =========================
+# SECRETS
+# =========================
+*.pem
+*.key
+*.crt
+secrets.json
+credentials.json
+service_account.json
+
+# =========================
+# BUILD / COMPILED
+# =========================
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.dll
+*.exe
+
+# =========================
+# EDITOR FILES
+# =========================
+.vscode/
+.idea/
+*.iml
+
+# =========================
+# DOCKER
+# =========================
+docker-data/
+*.tar
 # Logs
 logs
 *.log

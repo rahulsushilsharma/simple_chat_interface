@@ -1,20 +1,18 @@
 import { Box, Container, IconButton, Typography } from "@mui/material";
 
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import Sidebar from "../components/Sidebar";
-import theme from "../theme";
-import { MessageList, Message } from "../components/Message";
-import UserInput from "../components/UserInput";
-import { v4 as uuidv4 } from "uuid";
-import { getChat, getSessons, saveChat, saveSessons } from "../utils/history";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Message, MessageList } from "../components/Message";
+import Sidebar from "../components/Sidebar";
 import { UserContext } from "../components/UserContextProvider";
+import UserInput from "../components/UserInput";
 import {
   MessageInterface,
   OllamaMessageInterface,
   SessonInterface,
 } from "../interfaces/Interfaces";
-import { deleteSession } from "../utils/history";
+import theme from "../theme";
+import { saveSessons } from "../utils/history";
 
 async function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -55,36 +53,66 @@ function Chat() {
       setMessages([]);
       return;
     }
-    const chats = getChat(sesson.id);
-    if (chats) setMessages(chats);
-    console.log(chats);
+    getHistory(sesson.id)
     setChatLength(0);
   }, [sesson]);
 
+
+  async function getApiSessions() {
+    const session = await fetch("http://localhost:8000/session/session?user_id=1")
+    const data = await session.json()
+    console.log(data.map((ele: { id: string; session_name: string; }) => { return { id: ele.id, name: ele.session_name } }))
+    setSessons(data.map((ele: { id: string; session_name: string; }) => { return { id: ele.id, name: ele.session_name } }))
+  }
   useEffect(() => {
-    const sessons = getSessons();
-    if (sessons) setSessons(sessons);
+    // const sessons = getSessons();
+    getApiSessions()
+    // if (sessons) setSessons(sessons);
   }, []);
 
-  useEffect(() => {
-    saveChat(sesson.id, messages);
-    setFilteredMessages(
-      messages.map((m) => {
-        return { role: m.type, content: m.message };
-      })
-    );
-  }, [messages, sesson.id]);
 
-  function createSesson(name: string) {
-    const sessonId = uuidv4();
-    const sesson = {
-      id: sessonId,
-      name: name,
-    };
+  async function getHistory(session_id: string) {
+    const res = await fetch(`http://localhost:8000/chat/get_chat?session_id=${session_id}`)
+    const history = await res.json()
+    const localHistory = history.map(ele => { return { type: ele.message_type, message: ele.message } })
+    console.log(localHistory)
+    setFilteredMessages(localHistory)
+    setMessages(localHistory)
 
-    setSesson(sesson);
-    setSessons((prev) => [...prev, sesson]);
-    saveSessons([...sessons, sesson]);
+  }
+  // useEffect(() => {
+  //   saveChat(sesson.id, messages);
+  //   setFilteredMessages(
+  //     messages.map((m) => {
+  //       return { role: m.type, content: m.message };
+  //     })
+  //   );
+  // }, [messages, sesson.id]);
+
+  async function createSesson(name: string, session_type: string) {
+    // const sessonId = uuidv4();
+    const session_body = JSON.stringify({
+      "user_id": 1,
+      "temperature": 0,
+      "session_name": name,
+      "session_type": session_type,
+      "model_name": "goekdenizguelmez/JOSIEFIED-Qwen3:0.6b",
+      "files": ""
+    })
+    const sesson_res = await fetch("http://localhost:8000/session/create_session", {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "POST",
+      body: session_body
+    })
+    const sesson = await sesson_res.json()
+
+    setSesson({ ...sesson, name: sesson.session_name });
+    setSessons((prev) => [...prev, { ...sesson, name: sesson.session_name }]);
+    saveSessons([...sessons, { ...sesson, name: sesson.session_name }]);
+
+    return { ...sesson, name: sesson.session_name }
   }
 
   function updateMessage(message: MessageInterface) {
@@ -93,12 +121,18 @@ function Chat() {
     });
   }
 
+  async function deleteSession(session_id: string) {
+    await fetch(`http://localhost:8000/session/delete_session?session_id=${session_id}`, {
+      method: "DELETE"
+    })
+
+  }
+
   function deleteSession_(id: string) {
-    const session = deleteSession(id);
-    if (session) {
-      setSessons(session);
-      setSesson({ id: "-1", name: "" });
-    }
+    deleteSession(id);
+    setSessons(prev => prev.filter(ele => ele.id !== id));
+    setSesson({ id: "-1", name: "" });
+
   }
   async function scrollToBottom() {
     if (!chatContainer.current) return;
@@ -106,8 +140,9 @@ function Chat() {
   }
 
   async function handleSubmit(querry: string) {
+    let session = sesson
     if (sesson.id == "-1") {
-      createSesson(querry);
+      session = await createSesson(querry, "chat");
     }
 
     setStreaming(true);
@@ -122,15 +157,19 @@ function Chat() {
     if (chatContainer.current)
       chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
 
-    const response = await fetch("http://localhost:11434/api/chat", {
+    const response = await fetch("http://localhost:8000/chat/chat", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "text/event-stream",
+      },
       body: JSON.stringify({
-        messages: [...filteredMessages, { role: "user", content: querry }],
-        temperature: context?.temp,
-        model: context?.model?.model,
-        stream: true,
+        "session_id": session.id,
+        "message_type": "user",
+        "message": querry
       }),
     });
+
 
     const stream = response.body
       ?.pipeThrough(new TextDecoderStream())

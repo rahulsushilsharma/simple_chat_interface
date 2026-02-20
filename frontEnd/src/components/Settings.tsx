@@ -1,9 +1,3 @@
-import { Dispatch, useContext, useEffect, useState } from "react";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
 import {
   Autocomplete,
   Box,
@@ -11,7 +5,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import { Dispatch, useContext, useEffect, useState } from "react";
 import { UserContext } from "../components/UserContextProvider";
+import FileUploader from "./FileUploader";
 
 export default function SettingsDialog(props: {
   openState: [boolean, Dispatch<React.SetStateAction<boolean>>];
@@ -116,6 +117,7 @@ export default function SettingsDialog(props: {
                 max={1}
               />
             </Box>
+            <FileUploader />
           </Box>
         </DialogContent>
         <DialogActions>
