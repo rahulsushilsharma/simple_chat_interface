@@ -1,9 +1,9 @@
-from sqlalchemy import create_engine
-from utils.config_vars import DATABASE_URL
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
 import logging
 
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from utils.config_vars import DATABASE_URL
 
 db_engine = create_engine(
     DATABASE_URL, echo=True, connect_args={"check_same_thread": False}
