@@ -50,8 +50,7 @@ class File(Base):
     file_name = Column(String)
     file_type = Column(String)
     file_path = Column(String)
-    chunking_status = Column(String, nullable=True)
-    embedding_status = Column(String, nullable=True)
+    status = Column(String, nullable=False)
     owner = relationship("Users", back_populates="file")
 
 

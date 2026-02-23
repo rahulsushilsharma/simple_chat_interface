@@ -19,11 +19,14 @@ class BaseRepo(Generic[T]):
             logging.error(f"error at get_all() BaseRepo {str(e)}")
             raise
 
-    def get_by_id(self, key: str, val) -> Optional[T]:
+    def get_by_id(self, key: str, val, all=False) -> Optional[T] | Optional[list[T]]:
         try:
             field = getattr(self.model, key)
-            row = self.db.query(self.model).filter(field == val).first()
-            return row
+            filter = self.db.query(self.model).filter(field == val)
+            if all:
+                return filter.all()
+            else:
+                return filter.first()
         except Exception as e:
             logging.error(f"error at get_by_id() BaseRepo {str(e)}")
             raise

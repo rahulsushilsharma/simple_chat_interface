@@ -8,7 +8,7 @@ from langchain_wraper.langchain import chat_langchain
 from models import models
 from repo.chat_repo import ChatRepo
 from repo.session_repo import SessionRepo
-from schema import chat
+from schema import chat, session
 from sqlalchemy.orm import Session
 from utils.custom_httpx import CustomHttpx
 
@@ -48,12 +48,13 @@ async def chats(user_chat: chat.ChatInput, db: Session = Depends(get_db)):
             raise Exception("Error getting current session details")
         content = ""
         chat_schema = [chat.ChatOutput.model_validate(c) for c in chats]
+        session_schema = session.SessionOut.model_validate(cur_session)
 
         async def call_ollama_api() -> AsyncGenerator[str, None]:
             nonlocal content
 
             async for chunk in chat_langchain(
-                model_name=str(cur_session.model_name), history=chat_schema
+                model_name=session_schema.model_name, history=chat_schema
             ):
                 content += str(chunk.content)
                 try:

@@ -7,22 +7,11 @@ class FileInput(BaseModel):
     md5: str
     user_id: int
     file_path: str
-    chunking_status: str
-    embedding_status: str
+    status: str
 
     class Config:
         from_attributes = True
 
 
-class FileOut(BaseModel):
+class FileOut(FileInput):
     id: int
-    file_name: str
-    file_type: str
-    md5: str
-    user_id: int
-    file_path: str
-    chunking_status: str
-    embedding_status: str
-
-    class Config:
-        from_attributes = True
