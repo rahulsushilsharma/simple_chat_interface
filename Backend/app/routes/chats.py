@@ -1,13 +1,18 @@
 import json
+from collections.abc import AsyncGenerator
+from tokenize import String
 
 from database.database import get_db
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
-from langchain_wraper.langchain import chat_langchain
+from fastapi.security import HTTPBearer
+from langchain_wraper.langchain import chat_langchain, rag_chat
 from models import models
 from repo.chat_repo import ChatRepo
+from repo.file_repo import FileRepo
 from repo.session_repo import SessionRepo
-from schema import chat
+from schema import chat, session
+from schema.file import FileOut
 from sqlalchemy.orm import Session
 from utils.custom_httpx import CustomHttpx
 
@@ -77,6 +82,22 @@ async def chats(user_chat: chat.ChatInput, db: Session = Depends(get_db)):
         )
     except Exception as e:
         raise HTTPException(500, detail=f"Error generating response {str(e)}")
+
+
+@router.post("/rag_chat")
+def rag(user_id: int, file_id: int, db=Depends(get_db)):
+
+    file_repo = FileRepo(db)
+    file = file_repo.get_by_id("id", file_id)
+
+    if file is None:
+        return HTTPException(status.HTTP_404_NOT_FOUND, detail="file not found")
+
+    file_schema = FileOut.model_validate(file)
+
+    return {
+        "result": "success",
+    }
 
 
 def db_to_ollama(chats: list[chat.ChatOutput]):

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  "provider": {
+    "openrouter": {
+      "options": {
+        "apiKey": "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",
+        "baseURL": "https://openrouter.ai/api/v1"
+      },
+      "models": {
+        "qwen/qwen3-coder:free": {},
+        "moonshotai/kimi-k2:free": {},
+        "x-ai/grok-code-fast-1": {},
+        "z-ai/glm-4.6": {},
+        "google/gemini-2.5-flash-image": {}
+      }
+    }
+  },
+
+  "model": "zen/grok-code-fast-1",
+  "small_model": "zen/big-pickle"
+}

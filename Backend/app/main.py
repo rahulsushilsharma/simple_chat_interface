@@ -1,3 +1,5 @@
+from contextlib import asynccontextmanager
+
 import httpx
 import utils
 import utils.custom_httpx
@@ -9,12 +11,20 @@ from models.models import Base
 from routes import chats, files, metadata, session, user
 
 setup_logging()
-Base.metadata.create_all(db_engine)
-
-app = FastAPI()
 
 
-http_client = utils.custom_httpx.CustomHttpx()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Load the ML model
+    Base.metadata.create_all(db_engine)
+    yield
+    # Clean up the ML models and release the resources
+
+
+app = FastAPI(lifespan=lifespan)
+
+
+# http_client = utils.custom_httpx.CustomHttpx()
 # http_client = httpx.AsyncClient()
 
 origins = [

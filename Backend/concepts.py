@@ -107,31 +107,31 @@ import time
 
 
 class User:
-    user_id: str = "default"
+    user_id: str = "default"  # class atributes
 
     def __init__(self, name, date):
-        self.user_name = name
+        self.user_name = name  # instance attributes
         self.date = date
 
-    def who_am_i(self):
+    def who_am_i(self):  # instance method
         return self.user_name
 
     @classmethod
-    def create_cur_date(cls, name):
+    def create_cur_date(cls, name):  # class method
         cur_time = time.localtime()
         return cls(name, cur_time)
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # used to print
         return f"User(user_name: {self.user_name}, date:{self.date}, user_id:{self.user_id})"
 
-    def __eq__(self, value: object) -> bool:
+    def __eq__(self, value: object) -> bool:  # used to equate instances of class
         if not isinstance(value, User):
             return False
 
         return self.user_id == value.user_id and self.user_name == value.user_name
 
     @staticmethod
-    def check_age(time1, time2):
+    def check_age(time1, time2):  # helper methods which are related to class
         return time2 - time1
 
 
@@ -145,9 +145,9 @@ user3 = User.create_cur_date("user3")
 print(user3)
 
 
-class DbUser(User):
+class DbUser(User):  # inharitance
     def __init__(self, name, date):
-        super().__init__(name, date)
+        super().__init__(name, date)  # calling user init
         self.db_name = name + str(date)
 
     def what_db(self):
@@ -164,13 +164,13 @@ print(type(db_user1))
 from abc import ABC, abstractmethod
 
 
-class BookSchema(ABC):
+class BookSchema(ABC):  # abstract class
     @abstractmethod
     def get_book_name(self) -> str:
         pass
 
 
-class Book(BookSchema):
+class Book(BookSchema):  # needs to follow the abstract class structure
     def __init__(self, name) -> None:
         self.book_name = name
 
