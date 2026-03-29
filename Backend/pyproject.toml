@@ -24,6 +24,7 @@ dependencies = [
     "dataclasses-json==0.6.7",
     "distro==1.9.0",
     "dnspython==2.7.0",
+    "docling>=2.77.0",
     "durationpy==0.10",
     "email-validator==2.2.0",
     "fakeredis>=2.34.0",

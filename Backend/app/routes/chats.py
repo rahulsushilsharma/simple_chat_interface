@@ -1,23 +1,28 @@
 import json
 from collections.abc import AsyncGenerator
+from tokenize import String
 
 from database.database import get_db
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
-from langchain_wraper.langchain import chat_langchain
+from fastapi.security import HTTPBearer
+from langchain_wraper.langchain import chat_langchain, rag_chat
 from models import models
 from repo.chat_repo import ChatRepo
+from repo.file_repo import FileRepo
 from repo.session_repo import SessionRepo
 from schema import chat, session
+from schema.file import FileOut
 from sqlalchemy.orm import Session
 from utils.custom_httpx import CustomHttpx
 
+auth_schema = HTTPBearer()
 router = APIRouter(prefix="/chat", tags=["chats"])
 client = CustomHttpx()
 
 
 @router.get("/get_chat", response_model=list[chat.ChatOutput])
-def get_chat(session_id: int, db: Session = Depends(get_db)):
+def get_chat(session_id: int, db: Session = Depends(get_db), _=Depends(auth_schema)):
     try:
         chat_repo = ChatRepo(db)
         return chat_repo.get_history(session_id)
@@ -53,32 +58,65 @@ async def chats(user_chat: chat.ChatInput, db: Session = Depends(get_db)):
         async def call_ollama_api() -> AsyncGenerator[str, None]:
             nonlocal content
 
-            async for chunk in chat_langchain(
-                model_name=session_schema.model_name, history=chat_schema
-            ):
-                content += str(chunk.content)
-                try:
-                    yield chunk.model_dump_json()
-                except Exception as ex:
-                    yield f"error {ex}"
+            try:
+                async for chunk in chat_langchain(
+                    model_name=session_schema.model_name, history=chat_schema
+                ):
+                    token = str(chunk.content or "")
+                    content += token
+
+                    # VALID SSE FRAME
+                    yield f"data: {chunk.model_dump()}\n\n"
+
+            except Exception as ex:
+                # VALID SSE ERROR EVENT
+                yield f"event: error\ndata: {json.dumps({'error': str(ex)})}\n\n"
+                return
+
+            # save chat after stream completes
             data = chat.ChatInput(
                 session_id=user_chat.session_id,
                 message_type="assistant",
                 message=content,
             )
             add_chats(data, db)
-            yield json.dumps(
-                {
-                    "model": "gemma3n:latest",
-                    "created_at": "2025-07-14T13:58:12.771225Z",
-                    "message": {"role": "assistant", "content": "content"},
-                    "done": True,
-                }
-            )
 
-        return StreamingResponse(call_ollama_api(), media_type="text/event-stream")
+            # FINAL DONE EVENT (important for frontend)
+            done_payload = {
+                "type": "done",
+                "model": session_schema.model_name,
+                "content": content,
+            }
+
+            yield f"event: done\ndata: {json.dumps(done_payload, ensure_ascii=False)}\n\n"
+
+        return StreamingResponse(
+            call_ollama_api(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no",  # nginx
+            },
+        )
     except Exception as e:
         raise HTTPException(500, detail=f"Error generating response {str(e)}")
+
+
+@router.post("/rag_chat")
+def rag(user_id: int, file_id: int, db=Depends(get_db)):
+
+    file_repo = FileRepo(db)
+    file = file_repo.get_by_id("id", file_id)
+
+    if file is None:
+        return HTTPException(status.HTTP_404_NOT_FOUND, detail="file not found")
+
+    file_schema = FileOut.model_validate(file)
+
+    return {
+        "result": "success",
+    }
 
 
 def db_to_ollama(chats: list[chat.ChatOutput]):

@@ -1,4 +1,7 @@
+from pydoc import doc
+
 from database.database import Session
+from docling.document_converter import DocumentConverter
 from globel_logger.logging import logging
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
@@ -8,6 +11,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from models.models import Users
 from repo.file_repo import FileRepo
 from schema.file import FileOut
+
+doc_converter = DocumentConverter()
 
 
 def create_embedding(file: FileOut):
@@ -49,7 +54,7 @@ async def parse(file: FileOut):
 
 
 async def recursive_chunk(file: list[Document]):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=80)
     texts = await text_splitter.atransform_documents(file)
     return texts
 
@@ -124,3 +129,22 @@ def similarity_search(file: FileOut, user_id: int, query: str, k: int, *args, **
     except Exception as e:
         logging.error(f"Error at similarity_search() {str(e)}")
         raise e
+
+
+def convert_docs(docs: str, *args, **kwargs):
+    try:
+        return doc_converter.convert(docs, *args, **kwargs)
+    except Exception as e:
+        logging.error(f"Error at convert_docs() {str(e)}")
+        raise
+
+
+def parse_to_markdown(docs: list[str], output_file_path: str):
+    try:
+        for doc in docs:
+            doc = convert_docs(doc)
+            with open(output_file_path, "a", encoding="utf-8") as file:
+                file.write(doc.document.export_to_markdown())
+    except Exception as e:
+        logging.error(f"Error at parse_to_markdown() {str(e)}")
+        raise

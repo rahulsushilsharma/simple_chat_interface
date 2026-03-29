@@ -1,5 +1,9 @@
+from langchain.agents import create_agent
 from langchain.messages import AIMessage, HumanMessage, SystemMessage
+from langchain.tools import tool
 from langchain_ollama import ChatOllama, OllamaEmbeddings
+from langchain_wraper.rag import create_vectorstore
+from models.models import File
 from schema.chat import ChatInput, ChatOutput
 
 
@@ -33,5 +37,33 @@ async def chat_langchain(model_name: str, history: list[ChatOutput]):
         yield chunk
 
 
-async def rag_chat(model_name: str, history: list[ChatOutput]):
-    pass
+async def rag_chat(
+    model_name: str, history: list[ChatOutput], file: File, user_id: int
+):
+    vector_store = create_vectorstore(file, user_id)
+
+    @tool(response_format="content_and_artifact")
+    def retrieve_context(query: str):
+        """Retrieve information to help answer a query."""
+        # Search your vector store
+        retrieved_docs = vector_store.similarity_search(query, k=2)
+
+        # Format documents as text
+        serialized = "\n\n".join(
+            (f"Source: {doc.metadata}\nContent: {doc.page_content}")
+            for doc in retrieved_docs
+        )
+        return serialized, retrieved_docs
+
+    tools = [retrieve_context]
+    agent = create_agent(
+        model=model_name,
+        tools=tools,
+        system_prompt="you have retrival tool for documents",
+    )
+
+    # Use the agent
+    response = await agent.ainvoke(
+        {"messages": [{"role": "user", "content": "what is this file about?"}]}
+    )
+    return response

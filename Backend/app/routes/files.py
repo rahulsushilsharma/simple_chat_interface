@@ -1,9 +1,11 @@
 import asyncio
 import hashlib
+from os import listdir
+from os.path import isfile, join
 
 from database.database import get_db
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
-from langchain_wraper.rag import ingest, similarity_search
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from langchain_wraper.rag import ingest, parse_to_markdown, similarity_search
 from models import models
 from repo.file_repo import FileRepo
 from repo.session_repo import SessionRepo
@@ -85,6 +87,25 @@ def doc_data(file_id: int, db: Session = Depends(get_db)):
 
 @router.get("/similarity_search")
 def similarity(file_id: int, querry: str, k: int, db=Depends(get_db)):
-    file_repo = FileRepo(db)
-    file = file_repo.get_by_id("id", file_id)
-    return similarity_search(file, file.user_id, querry, k)  # type: ignore
+    try:
+        file_repo = FileRepo(db)
+        file = file_repo.get_by_id("id", file_id)
+        result = similarity_search(file, file.user_id, querry, k)  # type: ignore
+        return result
+    except Exception as e:
+        raise HTTPException(500, detail=f"{e}")
+
+
+@router.post("/to_markdown")
+def to_markdown(folder_path: str, output_file_path: str):
+    try:
+        onlyfiles = [
+            join(folder_path, f)
+            for f in listdir(folder_path)
+            if isfile(join(folder_path, f))
+        ]
+        print(onlyfiles)
+        parse_to_markdown(onlyfiles, output_file_path)
+        return {"result": "success"}
+    except Exception as e:
+        raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{e}")

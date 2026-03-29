@@ -24,7 +24,6 @@ function Chat() {
   const [message, setMessage] = useState("");
   const msgRef = useRef<HTMLDivElement>();
   const chatContainer = useRef<HTMLDivElement>();
-
   const [messages, setMessages] = useState<MessageInterface[]>([]);
   const [filteredMessages, setFilteredMessages] = useState<
     OllamaMessageInterface[]
@@ -53,32 +52,43 @@ function Chat() {
       setMessages([]);
       return;
     }
-    getHistory(sesson.id)
+    getHistory(sesson.id);
     setChatLength(0);
   }, [sesson]);
 
-
   async function getApiSessions() {
-    const session = await fetch("http://localhost:8000/session/session?user_id=1")
-    const data = await session.json()
-    console.log(data.map((ele: { id: string; session_name: string; }) => { return { id: ele.id, name: ele.session_name } }))
-    setSessons(data.map((ele: { id: string; session_name: string; }) => { return { id: ele.id, name: ele.session_name } }))
+    const session = await fetch(
+      "http://localhost:8000/session/session?user_id=1",
+    );
+    const data = await session.json();
+    console.log(
+      data.map((ele: { id: string; session_name: string }) => {
+        return { id: ele.id, name: ele.session_name };
+      }),
+    );
+    setSessons(
+      data.map((ele: { id: string; session_name: string }) => {
+        return { id: ele.id, name: ele.session_name };
+      }),
+    );
   }
   useEffect(() => {
     // const sessons = getSessons();
-    getApiSessions()
+    getApiSessions();
     // if (sessons) setSessons(sessons);
   }, []);
 
-
   async function getHistory(session_id: string) {
-    const res = await fetch(`http://localhost:8000/chat/get_chat?session_id=${session_id}`)
-    const history = await res.json()
-    const localHistory = history.map(ele => { return { type: ele.message_type, message: ele.message } })
-    console.log(localHistory)
-    setFilteredMessages(localHistory)
-    setMessages(localHistory)
-
+    const res = await fetch(
+      `http://localhost:8000/chat/get_chat?session_id=${session_id}`,
+    );
+    const history = await res.json();
+    const localHistory = history.map((ele) => {
+      return { type: ele.message_type, message: ele.message };
+    });
+    console.log(localHistory);
+    setFilteredMessages(localHistory);
+    setMessages(localHistory);
   }
   // useEffect(() => {
   //   saveChat(sesson.id, messages);
@@ -92,27 +102,30 @@ function Chat() {
   async function createSesson(name: string, session_type: string) {
     // const sessonId = uuidv4();
     const session_body = JSON.stringify({
-      "user_id": 1,
-      "temperature": 0,
-      "session_name": name,
-      "session_type": session_type,
-      "model_name": "goekdenizguelmez/JOSIEFIED-Qwen3:0.6b",
-      "files": ""
-    })
-    const sesson_res = await fetch("http://localhost:8000/session/create_session", {
-      headers: {
-        "Content-Type": "application/json"
+      user_id: 1,
+      temperature: context?.temp,
+      session_name: name,
+      session_type: session_type,
+      model_name: context?.model?.model,
+      files: "",
+    });
+    const sesson_res = await fetch(
+      "http://localhost:8000/session/create_session",
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: session_body,
       },
-      method: "POST",
-      body: session_body
-    })
-    const sesson = await sesson_res.json()
+    );
+    const sesson = await sesson_res.json();
 
     setSesson({ ...sesson, name: sesson.session_name });
     setSessons((prev) => [...prev, { ...sesson, name: sesson.session_name }]);
     saveSessons([...sessons, { ...sesson, name: sesson.session_name }]);
 
-    return { ...sesson, name: sesson.session_name }
+    return { ...sesson, name: sesson.session_name };
   }
 
   function updateMessage(message: MessageInterface) {
@@ -122,17 +135,18 @@ function Chat() {
   }
 
   async function deleteSession(session_id: string) {
-    await fetch(`http://localhost:8000/session/delete_session?session_id=${session_id}`, {
-      method: "DELETE"
-    })
-
+    await fetch(
+      `http://localhost:8000/session/delete_session?session_id=${session_id}`,
+      {
+        method: "DELETE",
+      },
+    );
   }
 
   function deleteSession_(id: string) {
     deleteSession(id);
-    setSessons(prev => prev.filter(ele => ele.id !== id));
+    setSessons((prev) => prev.filter((ele) => ele.id !== id));
     setSesson({ id: "-1", name: "" });
-
   }
   async function scrollToBottom() {
     if (!chatContainer.current) return;
@@ -140,7 +154,7 @@ function Chat() {
   }
 
   async function handleSubmit(querry: string) {
-    let session = sesson
+    let session = sesson;
     if (sesson.id == "-1") {
       session = await createSesson(querry, "chat");
     }
@@ -161,48 +175,94 @@ function Chat() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Accept": "text/event-stream",
+        Accept: "text/event-stream",
       },
       body: JSON.stringify({
-        "session_id": session.id,
-        "message_type": "user",
-        "message": querry
+        session_id: session.id,
+        message_type: "user",
+        message: querry,
       }),
     });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    if (!response.body) {
+      throw new Error("No response body");
+    }
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
 
-
-    const stream = response.body
-      ?.pipeThrough(new TextDecoderStream())
-      .getReader();
-
+    let buffer = "";
     let mes = "";
-    // eslint-disable-next-line no-constant-condition
-    while (true && stream) {
-      const { done, value } = await stream.read();
-      if (done) break; // The streaming has ended.
-      console.log(value);
-      for (const line of value.split("\n")) {
-        if (!line) continue;
-        const value = line;
-        console.log("value", value);
-        const json = JSON.parse(value.trim() || "{}");
-        if (json?.done) {
-          const evalData = {
-            total_duration: json?.total_duration / 1000000000,
-            load_duration: json?.load_duration / 1000000000,
-            prompt_eval_count: json?.prompt_eval_count,
-            prompt_eval_duration: json?.prompt_eval_duration / 1000000000,
-            eval_count: json?.eval_count,
-            eval_duration: json?.eval_duration / 1000000000,
-          };
+    console.log("reader", reader);
+    while (true && reader) {
+      const { done, value } = await reader.read();
+      if (done) break;
 
+      buffer += decoder.decode(value, { stream: true });
+      console.log("buffer", buffer);
+      // split complete SSE frames
+      const frames = buffer.split("\n\n");
+      buffer = frames.pop() || ""; // keep incomplete frame
+      console.log("frames", frames);
+      for (const frame of frames) {
+        let eventType = "message";
+        let dataLine = null;
+
+        const lines = frame.split("\n");
+
+        for (const line of lines) {
+          if (line.startsWith("event:")) {
+            eventType = line.replace("event:", "").trim();
+          }
+
+          if (line.startsWith("data:")) {
+            dataLine = line.replace("data:", "").trim();
+          }
+        }
+
+        if (!dataLine) continue;
+
+        // convert python dict → valid JSON
+        let json;
+        try {
+          json = JSON.parse(
+            dataLine
+              .replace(/'/g, '"') // python → json
+              .replace(/\bNone\b/g, "null")
+              .replace(/\bTrue\b/g, "true")
+              .replace(/\bFalse\b/g, "false"),
+          );
+        } catch {
+          continue;
+        }
+
+        // handle streaming tokens
+        if (json.content) {
+          mes += json.content;
+          setMessage(mes);
+          await scrollToBottom();
+        }
+
+        // done event
+        if (eventType === "done") {
+          console.log("completed", json);
+        }
+
+        // ollama stats frame
+        if (json.response_metadata?.done) {
+          const evalData = {
+            total_duration: json.response_metadata.total_duration / 1e9,
+            load_duration: json.response_metadata.load_duration / 1e9,
+            prompt_eval_count: json.response_metadata.prompt_eval_count,
+            prompt_eval_duration:
+              json.response_metadata.prompt_eval_duration / 1e9,
+            eval_count: json.response_metadata.eval_count,
+            eval_duration: json.response_metadata.eval_duration / 1e9,
+          };
           setEvalData(evalData);
         }
-        mes += JSON.parse(value.trim() || "{}")?.message.content;
-        setMessage(mes);
       }
-
-      await scrollToBottom();
     }
 
     setStreaming(false);
@@ -235,7 +295,7 @@ function Chat() {
         handleClose={handleDrawerClose}
       />
     ),
-    [sesson, sessons, isDrawerOpen, drawerWidth]
+    [sesson, sessons, isDrawerOpen, drawerWidth],
   );
 
   return (
@@ -326,7 +386,7 @@ function Chat() {
                   {evalData?.eval_count &&
                     evalData?.total_duration &&
                     (evalData?.eval_count / evalData?.total_duration).toFixed(
-                      2
+                      2,
                     )}
                   tokens/seconds
                 </Typography>
