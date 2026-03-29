@@ -48,6 +48,8 @@ async def chats(user_chat: chat.ChatInput, db: Session = Depends(get_db)):
             raise Exception("Error getting history")
         session_repo = SessionRepo(db)
         cur_session = session_repo.get_by_id("id", user_chat.session_id)
+        if isinstance(cur_session, list):
+            cur_session = cur_session[0]
         if cur_session is None:
             raise Exception("Error getting current session details")
         content = ""

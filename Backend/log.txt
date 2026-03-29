@@ -2859,3 +2859,183 @@ FROM session
 WHERE session.id = ?
 2026-03-29 15:40:12,399 sqlalchemy.engine.Engine INFO [cached since 2497s ago] (9,)
 2026-03-29 15:40:12,401 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:47:58,304 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:47:58,305 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-03-29 15:47:58,305 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 15:47:58,307 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-03-29 15:47:58,307 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 15:47:58,307 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-03-29 15:47:58,308 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 15:47:58,308 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-03-29 15:47:58,308 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 15:47:58,309 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-03-29 15:47:58,309 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 15:47:58,309 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:47:58,356 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:47:58,358 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-29 15:47:58,359 sqlalchemy.engine.Engine INFO [generated in 0.00040s] (1,)
+2026-03-29 15:47:58,362 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,362 sqlalchemy.engine.Engine INFO [generated in 0.00045s] (1,)
+2026-03-29 15:47:58,363 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,364 sqlalchemy.engine.Engine INFO [cached since 0.002083s ago] (1,)
+2026-03-29 15:47:58,365 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,365 sqlalchemy.engine.Engine INFO [cached since 0.003116s ago] (1,)
+2026-03-29 15:47:58,365 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,365 sqlalchemy.engine.Engine INFO [cached since 0.003832s ago] (1,)
+2026-03-29 15:47:58,366 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,366 sqlalchemy.engine.Engine INFO [cached since 0.004586s ago] (1,)
+2026-03-29 15:47:58,367 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,367 sqlalchemy.engine.Engine INFO [cached since 0.005254s ago] (1,)
+2026-03-29 15:47:58,367 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,367 sqlalchemy.engine.Engine INFO [cached since 0.006092s ago] (1,)
+2026-03-29 15:47:58,368 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,369 sqlalchemy.engine.Engine INFO [cached since 0.007397s ago] (1,)
+2026-03-29 15:47:58,369 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,369 sqlalchemy.engine.Engine INFO [cached since 0.008571s ago] (1,)
+2026-03-29 15:47:58,372 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:47:58,376 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:47:58,377 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-29 15:47:58,377 sqlalchemy.engine.Engine INFO [cached since 0.01852s ago] (1,)
+2026-03-29 15:47:58,378 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,379 sqlalchemy.engine.Engine INFO [cached since 0.01726s ago] (1,)
+2026-03-29 15:47:58,380 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,381 sqlalchemy.engine.Engine INFO [cached since 0.01909s ago] (1,)
+2026-03-29 15:47:58,381 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,382 sqlalchemy.engine.Engine INFO [cached since 0.02035s ago] (1,)
+2026-03-29 15:47:58,382 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,383 sqlalchemy.engine.Engine INFO [cached since 0.02137s ago] (1,)
+2026-03-29 15:47:58,383 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,383 sqlalchemy.engine.Engine INFO [cached since 0.02224s ago] (1,)
+2026-03-29 15:47:58,384 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,384 sqlalchemy.engine.Engine INFO [cached since 0.02321s ago] (1,)
+2026-03-29 15:47:58,385 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,385 sqlalchemy.engine.Engine INFO [cached since 0.02433s ago] (1,)
+2026-03-29 15:47:58,386 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,387 sqlalchemy.engine.Engine INFO [cached since 0.02555s ago] (1,)
+2026-03-29 15:47:58,388 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,388 sqlalchemy.engine.Engine INFO [cached since 0.02697s ago] (1,)
+2026-03-29 15:47:58,390 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:47:58,392 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:47:58,393 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-29 15:47:58,394 sqlalchemy.engine.Engine INFO [cached since 0.03509s ago] (1,)
+2026-03-29 15:47:58,395 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,395 sqlalchemy.engine.Engine INFO [cached since 0.03355s ago] (1,)
+2026-03-29 15:47:58,395 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,395 sqlalchemy.engine.Engine INFO [cached since 0.03465s ago] (1,)
+2026-03-29 15:47:58,397 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,397 sqlalchemy.engine.Engine INFO [cached since 0.03553s ago] (1,)
+2026-03-29 15:47:58,398 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,398 sqlalchemy.engine.Engine INFO [cached since 0.03653s ago] (1,)
+2026-03-29 15:47:58,399 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,399 sqlalchemy.engine.Engine INFO [cached since 0.03758s ago] (1,)
+2026-03-29 15:47:58,400 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,400 sqlalchemy.engine.Engine INFO [cached since 0.03857s ago] (1,)
+2026-03-29 15:47:58,400 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,401 sqlalchemy.engine.Engine INFO [cached since 0.03939s ago] (1,)
+2026-03-29 15:47:58,401 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,401 sqlalchemy.engine.Engine INFO [cached since 0.04005s ago] (1,)
+2026-03-29 15:47:58,402 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,402 sqlalchemy.engine.Engine INFO [cached since 0.04138s ago] (1,)
+2026-03-29 15:47:58,405 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:47:58,408 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:47:58,409 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-29 15:47:58,409 sqlalchemy.engine.Engine INFO [cached since 0.05121s ago] (1,)
+2026-03-29 15:47:58,411 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,411 sqlalchemy.engine.Engine INFO [cached since 0.05032s ago] (1,)
+2026-03-29 15:47:58,412 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,414 sqlalchemy.engine.Engine INFO [cached since 0.05185s ago] (1,)
+2026-03-29 15:47:58,415 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,415 sqlalchemy.engine.Engine INFO [cached since 0.05301s ago] (1,)
+2026-03-29 15:47:58,415 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,416 sqlalchemy.engine.Engine INFO [cached since 0.05394s ago] (1,)
+2026-03-29 15:47:58,416 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,416 sqlalchemy.engine.Engine INFO [cached since 0.05485s ago] (1,)
+2026-03-29 15:47:58,417 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,418 sqlalchemy.engine.Engine INFO [cached since 0.05634s ago] (1,)
+2026-03-29 15:47:58,419 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,419 sqlalchemy.engine.Engine INFO [cached since 0.05798s ago] (1,)
+2026-03-29 15:47:58,420 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,420 sqlalchemy.engine.Engine INFO [cached since 0.05907s ago] (1,)
+2026-03-29 15:47:58,421 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:47:58,421 sqlalchemy.engine.Engine INFO [cached since 0.0599s ago] (1,)
+2026-03-29 15:47:58,422 sqlalchemy.engine.Engine INFO ROLLBACK
