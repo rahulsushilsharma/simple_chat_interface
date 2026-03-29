@@ -1,5 +1,5 @@
-import { TextField, InputAdornment, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import { IconButton, InputAdornment, TextField } from "@mui/material";
 import { KeyboardEvent, useState } from "react";
 
 export default function UserInput(props: {
@@ -10,7 +10,7 @@ export default function UserInput(props: {
   const [message, setMessage] = useState("");
 
   function handleShiftEnter(event: KeyboardEvent<HTMLDivElement>) {
-    if (event.code == "Enter" && !event.shiftKey  ) {
+    if (event.code == "Enter" && !event.shiftKey) {
       handleSubmit(message);
       setMessage("");
     }
@@ -27,6 +27,7 @@ export default function UserInput(props: {
           <InputAdornment
             sx={{ alignSelf: "end", marginBottom: "10px" }}
             position="end"
+            onClick={() => handleSubmit(message)}
           >
             <IconButton>
               <SendIcon />

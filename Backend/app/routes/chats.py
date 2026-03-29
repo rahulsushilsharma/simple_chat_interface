@@ -33,7 +33,7 @@ def add_chats(chat: chat.ChatInput, db: Session):
         raise HTTPException(500, detail=f"Error adding chats {str(e)}")
 
 
-@router.post("/chat", response_model=chat.ChatOutput)
+@router.post("/chat")
 async def chats(user_chat: chat.ChatInput, db: Session = Depends(get_db)):
     try:
         add_chats(user_chat, db)
@@ -56,23 +56,25 @@ async def chats(user_chat: chat.ChatInput, db: Session = Depends(get_db)):
             ):
                 content += str(chunk.content)
 
-                yield chunk
-            yield json.dumps(
-                {
-                    "model": "gemma3n:latest",
-                    "created_at": "2025-07-14T13:58:12.771225Z",
-                    "message": {"role": "assistant", "content": "content"},
-                    "done": True,
-                }
-            )
+                yield f"data: {chunk.model_dump_json()}\n\n"
+
             data = chat.ChatInput(
                 session_id=user_chat.session_id,
                 message_type="assistant",
                 message=content,
             )
             add_chats(data, db)
+            print("added to chat")
 
-        return StreamingResponse(call_ollama_api(), media_type="text/event-stream")
+        return StreamingResponse(
+            call_ollama_api(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "Transfer-Encoding": "chunked",
+            },
+        )
     except Exception as e:
         raise HTTPException(500, detail=f"Error generating response {str(e)}")
 

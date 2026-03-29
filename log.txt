@@ -7,7 +7,7 @@
 2025-07-13 01:22:25,135 sqlalchemy.engine.Engine INFO [raw sql] ()
 2025-07-13 01:22:25,135 sqlalchemy.engine.Engine INFO COMMIT
 2025-07-13 01:22:25,432 uvicorn.error INFO Will watch for changes in these directories: ['D:\\dev\\open_projects\\simple_chat_interface\\backend']
-2025-07-13 01:22:25,437 uvicorn.error INFO Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2025-07-13 01:22:25,437 uvicorn.error INFO Uvicorn running on http://131.0.0.1:8000 (Press CTRL+C to quit)
 2025-07-13 01:22:25,437 uvicorn.error INFO Started reloader process [10336] using WatchFiles
 2025-07-13 01:22:26,469 sqlalchemy.engine.Engine INFO BEGIN (implicit)
 2025-07-13 01:22:26,469 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")

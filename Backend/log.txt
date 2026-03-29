@@ -1338,3 +1338,1524 @@ WHERE chat_history.id = ?
 2026-02-20 18:37:07,493 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
 2026-02-20 18:37:07,493 sqlalchemy.engine.Engine INFO [raw sql] ()
 2026-02-20 18:37:07,494 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-28 15:39:58,132 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 15:39:58,132 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-03-28 15:39:58,132 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-28 15:39:58,133 sqlalchemy.engine.Engine INFO PRAGMA temp.table_info("user")
+2026-03-28 15:39:58,133 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-28 15:39:58,133 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-03-28 15:39:58,135 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-28 15:39:58,135 sqlalchemy.engine.Engine INFO PRAGMA temp.table_info("session")
+2026-03-28 15:39:58,135 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-28 15:39:58,135 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-03-28 15:39:58,136 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-28 15:39:58,136 sqlalchemy.engine.Engine INFO PRAGMA temp.table_info("chat_history")
+2026-03-28 15:39:58,136 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-28 15:39:58,137 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-03-28 15:39:58,137 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-28 15:39:58,137 sqlalchemy.engine.Engine INFO PRAGMA temp.table_info("file")
+2026-03-28 15:39:58,137 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-28 15:39:58,137 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-03-28 15:39:58,138 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-28 15:39:58,138 sqlalchemy.engine.Engine INFO PRAGMA temp.table_info("citation")
+2026-03-28 15:39:58,138 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-28 15:39:58,139 sqlalchemy.engine.Engine INFO 
+CREATE TABLE user (
+	id INTEGER NOT NULL, 
+	name VARCHAR, 
+	email VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2026-03-28 15:39:58,139 sqlalchemy.engine.Engine INFO [no key 0.00039s] ()
+2026-03-28 15:39:58,142 sqlalchemy.engine.Engine INFO CREATE INDEX ix_user_id ON user (id)
+2026-03-28 15:39:58,142 sqlalchemy.engine.Engine INFO [no key 0.00037s] ()
+2026-03-28 15:39:58,147 sqlalchemy.engine.Engine INFO CREATE UNIQUE INDEX ix_user_email ON user (email)
+2026-03-28 15:39:58,147 sqlalchemy.engine.Engine INFO [no key 0.00056s] ()
+2026-03-28 15:39:58,151 sqlalchemy.engine.Engine INFO 
+CREATE TABLE session (
+	id INTEGER NOT NULL, 
+	session_name VARCHAR, 
+	session_type VARCHAR, 
+	model_name VARCHAR, 
+	temperature FLOAT, 
+	file_id VARCHAR, 
+	user_id INTEGER, 
+	files VARCHAR, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES user (id)
+)
+
+
+2026-03-28 15:39:58,151 sqlalchemy.engine.Engine INFO [no key 0.00039s] ()
+2026-03-28 15:39:58,154 sqlalchemy.engine.Engine INFO CREATE INDEX ix_session_id ON session (id)
+2026-03-28 15:39:58,155 sqlalchemy.engine.Engine INFO [no key 0.00034s] ()
+2026-03-28 15:39:58,158 sqlalchemy.engine.Engine INFO 
+CREATE TABLE file (
+	id INTEGER NOT NULL, 
+	user_id INTEGER, 
+	md5 VARCHAR, 
+	file_name VARCHAR, 
+	file_type VARCHAR, 
+	file_path VARCHAR, 
+	chunking_status VARCHAR, 
+	embedding_status VARCHAR, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES user (id)
+)
+
+
+2026-03-28 15:39:58,158 sqlalchemy.engine.Engine INFO [no key 0.00049s] ()
+2026-03-28 15:39:58,161 sqlalchemy.engine.Engine INFO CREATE INDEX ix_file_id ON file (id)
+2026-03-28 15:39:58,161 sqlalchemy.engine.Engine INFO [no key 0.00023s] ()
+2026-03-28 15:39:58,165 sqlalchemy.engine.Engine INFO 
+CREATE TABLE chat_history (
+	id INTEGER NOT NULL, 
+	message VARCHAR, 
+	message_type VARCHAR, 
+	session_id INTEGER, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(session_id) REFERENCES session (id)
+)
+
+
+2026-03-28 15:39:58,165 sqlalchemy.engine.Engine INFO [no key 0.00050s] ()
+2026-03-28 15:39:58,169 sqlalchemy.engine.Engine INFO CREATE INDEX ix_chat_history_id ON chat_history (id)
+2026-03-28 15:39:58,169 sqlalchemy.engine.Engine INFO [no key 0.00026s] ()
+2026-03-28 15:39:58,173 sqlalchemy.engine.Engine INFO 
+CREATE TABLE citation (
+	id INTEGER NOT NULL, 
+	citation VARCHAR, 
+	file_name VARCHAR, 
+	file_id INTEGER, 
+	chat_id INTEGER, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(chat_id) REFERENCES chat_history (id)
+)
+
+
+2026-03-28 15:39:58,173 sqlalchemy.engine.Engine INFO [no key 0.00054s] ()
+2026-03-28 15:39:58,179 sqlalchemy.engine.Engine INFO CREATE INDEX ix_citation_id ON citation (id)
+2026-03-28 15:39:58,179 sqlalchemy.engine.Engine INFO [no key 0.00032s] ()
+2026-03-28 15:39:58,181 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-28 16:03:56,739 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:03:56,740 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-03-28 16:03:56,740 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-28 16:03:56,741 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-03-28 16:03:56,741 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-28 16:03:56,741 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-03-28 16:03:56,741 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-28 16:03:56,741 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-03-28 16:03:56,741 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-28 16:03:56,743 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-03-28 16:03:56,743 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-28 16:03:56,743 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-28 16:05:00,558 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:05:00,563 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-28 16:05:00,563 sqlalchemy.engine.Engine INFO [generated in 0.00070s] (1,)
+2026-03-28 16:05:00,567 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:05:00,603 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:05:00,603 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-28 16:05:00,604 sqlalchemy.engine.Engine INFO [cached since 0.04101s ago] (1,)
+2026-03-28 16:05:00,607 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:11:11,553 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:11:11,556 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-28 16:11:11,556 sqlalchemy.engine.Engine INFO [cached since 371s ago] (1,)
+2026-03-28 16:11:11,560 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:11:11,562 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:11:11,564 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-28 16:11:11,564 sqlalchemy.engine.Engine INFO [cached since 371s ago] (1,)
+2026-03-28 16:11:11,566 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:16:37,276 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:16:37,278 sqlalchemy.engine.Engine INFO SELECT file.id AS file_id, file.user_id AS file_user_id, file.md5 AS file_md5, file.file_name AS file_file_name, file.file_type AS file_file_type, file.file_path AS file_file_path, file.chunking_status AS file_chunking_status, file.embedding_status AS file_embedding_status 
+FROM file 
+WHERE file.user_id = ?
+2026-03-28 16:16:37,278 sqlalchemy.engine.Engine INFO [generated in 0.00102s] (1,)
+2026-03-28 16:16:37,282 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:16:37,287 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:16:37,288 sqlalchemy.engine.Engine INFO SELECT file.id AS file_id, file.user_id AS file_user_id, file.md5 AS file_md5, file.file_name AS file_file_name, file.file_type AS file_file_type, file.file_path AS file_file_path, file.chunking_status AS file_chunking_status, file.embedding_status AS file_embedding_status 
+FROM file 
+WHERE file.user_id = ?
+2026-03-28 16:16:37,288 sqlalchemy.engine.Engine INFO [cached since 0.01058s ago] (1,)
+2026-03-28 16:16:37,291 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:17:04,400 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:17:04,401 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-28 16:17:04,403 sqlalchemy.engine.Engine INFO [cached since 723.8s ago] (1,)
+2026-03-28 16:17:04,407 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:17:04,414 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:17:04,415 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-28 16:17:04,416 sqlalchemy.engine.Engine INFO [cached since 723.9s ago] (1,)
+2026-03-28 16:17:04,419 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:17:10,400 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:17:10,401 sqlalchemy.engine.Engine INFO SELECT file.id AS file_id, file.user_id AS file_user_id, file.md5 AS file_md5, file.file_name AS file_file_name, file.file_type AS file_file_type, file.file_path AS file_file_path, file.chunking_status AS file_chunking_status, file.embedding_status AS file_embedding_status 
+FROM file 
+WHERE file.user_id = ?
+2026-03-28 16:17:10,401 sqlalchemy.engine.Engine INFO [cached since 33.12s ago] (1,)
+2026-03-28 16:17:10,404 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:17:10,413 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:17:10,413 sqlalchemy.engine.Engine INFO SELECT file.id AS file_id, file.user_id AS file_user_id, file.md5 AS file_md5, file.file_name AS file_file_name, file.file_type AS file_file_type, file.file_path AS file_file_path, file.chunking_status AS file_chunking_status, file.embedding_status AS file_embedding_status 
+FROM file 
+WHERE file.user_id = ?
+2026-03-28 16:17:10,415 sqlalchemy.engine.Engine INFO [cached since 33.14s ago] (1,)
+2026-03-28 16:17:10,418 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:17:40,622 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:17:40,625 sqlalchemy.engine.Engine INFO INSERT INTO session (session_name, session_type, model_name, temperature, file_id, user_id, files) VALUES (?, ?, ?, ?, ?, ?, ?)
+2026-03-28 16:17:40,626 sqlalchemy.engine.Engine INFO [generated in 0.00103s] ('hi', 'chat', 'goekdenizguelmez/JOSIEFIED-Qwen3:0.6b', 0.0, None, 1, '')
+2026-03-28 16:17:40,631 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-28 16:17:40,636 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:17:40,639 sqlalchemy.engine.Engine INFO SELECT session.id, session.session_name, session.session_type, session.model_name, session.temperature, session.file_id, session.user_id, session.files 
+FROM session 
+WHERE session.id = ?
+2026-03-28 16:17:40,640 sqlalchemy.engine.Engine INFO [generated in 0.00062s] (1,)
+2026-03-28 16:17:40,647 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-28 16:17:40,648 sqlalchemy.engine.Engine INFO [generated in 0.00151s] (1,)
+2026-03-28 16:17:40,650 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:17:40,737 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:17:40,739 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-28 16:17:40,740 sqlalchemy.engine.Engine INFO [generated in 0.00096s] (1,)
+2026-03-28 16:17:40,747 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:17:40,777 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:17:40,780 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-28 16:17:40,781 sqlalchemy.engine.Engine INFO [generated in 0.00076s] ('hi', 'user', 1)
+2026-03-28 16:17:40,783 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-28 16:17:40,790 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:17:40,793 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-28 16:17:40,797 sqlalchemy.engine.Engine INFO [generated in 0.00477s] (1,)
+2026-03-28 16:17:40,803 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-28 16:17:40,804 sqlalchemy.engine.Engine INFO [cached since 0.06436s ago] (1,)
+2026-03-28 16:17:40,808 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-28 16:17:40,808 sqlalchemy.engine.Engine INFO [generated in 0.00074s] (1, 1, 0)
+2026-03-28 16:17:40,811 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:17:40,940 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-28 16:17:40,942 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000023E740359A0>
+2026-03-28 16:17:40,942 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-28 16:17:40,943 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-28 16:17:40,943 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-28 16:17:40,943 httpcore.http11 DEBUG send_request_body.complete
+2026-03-28 16:17:40,943 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-28 16:17:40,945 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 404, b'Not Found', [(b'Content-Type', b'application/json; charset=utf-8'), (b'Date', b'Sat, 28 Mar 2026 10:47:40 GMT'), (b'Content-Length', b'67')])
+2026-03-28 16:17:40,946 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 404 Not Found"
+2026-03-28 16:17:40,946 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-28 16:17:40,946 httpcore.http11 DEBUG receive_response_body.complete
+2026-03-28 16:17:40,946 httpcore.http11 DEBUG response_closed.started
+2026-03-28 16:17:40,946 httpcore.http11 DEBUG response_closed.complete
+2026-03-28 16:23:34,359 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:23:34,359 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-28 16:23:34,360 sqlalchemy.engine.Engine INFO [cached since 1114s ago] (1,)
+2026-03-28 16:23:34,361 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-28 16:23:34,362 sqlalchemy.engine.Engine INFO [cached since 353.7s ago] (1,)
+2026-03-28 16:23:34,364 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:23:43,238 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:23:43,238 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-28 16:23:43,239 sqlalchemy.engine.Engine INFO [cached since 1123s ago] (1,)
+2026-03-28 16:23:43,241 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-28 16:23:43,241 sqlalchemy.engine.Engine INFO [cached since 362.6s ago] (1,)
+2026-03-28 16:23:43,243 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:23:43,251 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:23:43,252 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-28 16:23:43,252 sqlalchemy.engine.Engine INFO [cached since 1123s ago] (1,)
+2026-03-28 16:23:43,255 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-28 16:23:43,255 sqlalchemy.engine.Engine INFO [cached since 362.6s ago] (1,)
+2026-03-28 16:23:43,257 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:24:28,842 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:24:28,843 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-28 16:24:28,843 sqlalchemy.engine.Engine INFO [cached since 1168s ago] (1,)
+2026-03-28 16:24:28,844 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-28 16:24:28,845 sqlalchemy.engine.Engine INFO [cached since 408.2s ago] (1,)
+2026-03-28 16:24:28,846 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:24:54,357 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:24:54,358 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-28 16:24:54,358 sqlalchemy.engine.Engine INFO [cached since 1194s ago] (1,)
+2026-03-28 16:24:54,360 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-28 16:24:54,360 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:24:54,362 sqlalchemy.engine.Engine INFO [cached since 433.7s ago] (1,)
+2026-03-28 16:24:54,362 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-28 16:24:54,363 sqlalchemy.engine.Engine INFO [cached since 1194s ago] (1,)
+2026-03-28 16:24:54,363 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:24:54,368 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-28 16:24:54,369 sqlalchemy.engine.Engine INFO [cached since 433.7s ago] (1,)
+2026-03-28 16:24:54,370 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:24:56,613 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:24:56,614 sqlalchemy.engine.Engine INFO INSERT INTO session (session_name, session_type, model_name, temperature, file_id, user_id, files) VALUES (?, ?, ?, ?, ?, ?, ?)
+2026-03-28 16:24:56,614 sqlalchemy.engine.Engine INFO [cached since 436s ago] ('hi', 'chat', 'qwen3.5:2b', 0.7, None, 1, '')
+2026-03-28 16:24:56,616 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-28 16:24:56,620 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:24:56,621 sqlalchemy.engine.Engine INFO SELECT session.id, session.session_name, session.session_type, session.model_name, session.temperature, session.file_id, session.user_id, session.files 
+FROM session 
+WHERE session.id = ?
+2026-03-28 16:24:56,621 sqlalchemy.engine.Engine INFO [cached since 436s ago] (2,)
+2026-03-28 16:24:56,624 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-28 16:24:56,624 sqlalchemy.engine.Engine INFO [cached since 436s ago] (1,)
+2026-03-28 16:24:56,625 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:24:56,696 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:24:56,696 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-28 16:24:56,696 sqlalchemy.engine.Engine INFO [cached since 436s ago] (2,)
+2026-03-28 16:24:56,699 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:24:56,750 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:24:56,750 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-28 16:24:56,751 sqlalchemy.engine.Engine INFO [cached since 436s ago] ('hi', 'user', 2)
+2026-03-28 16:24:56,753 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-28 16:24:56,756 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:24:56,756 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-28 16:24:56,757 sqlalchemy.engine.Engine INFO [cached since 436s ago] (2,)
+2026-03-28 16:24:56,758 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-28 16:24:56,758 sqlalchemy.engine.Engine INFO [cached since 436s ago] (2,)
+2026-03-28 16:24:56,759 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-28 16:24:56,759 sqlalchemy.engine.Engine INFO [cached since 436s ago] (2, 1, 0)
+2026-03-28 16:24:56,761 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:24:56,840 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-28 16:24:56,842 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000023E740CA330>
+2026-03-28 16:24:56,842 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-28 16:24:56,842 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-28 16:24:56,842 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-28 16:24:56,843 httpcore.http11 DEBUG send_request_body.complete
+2026-03-28 16:24:56,843 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-28 16:25:03,551 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sat, 28 Mar 2026 10:55:03 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-28 16:25:03,551 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-28 16:25:03,551 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-28 16:25:23,204 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:25:23,205 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-28 16:25:23,205 sqlalchemy.engine.Engine INFO [cached since 462.4s ago] ('hi\n', 'user', 2)
+2026-03-28 16:25:23,207 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-28 16:25:23,210 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-28 16:25:23,211 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-28 16:25:23,211 sqlalchemy.engine.Engine INFO [cached since 462.4s ago] (3,)
+2026-03-28 16:25:23,213 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-28 16:25:23,213 sqlalchemy.engine.Engine INFO [cached since 462.5s ago] (2,)
+2026-03-28 16:25:23,215 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-28 16:25:23,215 sqlalchemy.engine.Engine INFO [cached since 462.4s ago] (2, 1, 0)
+2026-03-28 16:25:23,218 httpcore.http11 DEBUG response_closed.started
+2026-03-28 16:25:23,219 asyncio ERROR Task exception was never retrieved
+future: <Task finished name='Task-79' coro=<<async_generator_athrow without __name__>()> exception=RuntimeError('aclose(): asynchronous generator is already running')>
+RuntimeError: aclose(): asynchronous generator is already running
+2026-03-28 16:25:23,220 httpcore.http11 DEBUG receive_response_body.failed exception=GeneratorExit()
+2026-03-28 16:25:23,220 httpcore.http11 DEBUG response_closed.complete
+2026-03-28 16:25:23,220 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-28 16:25:23,295 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-28 16:25:23,296 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000023E74042BD0>
+2026-03-28 16:25:23,297 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-28 16:25:23,297 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-28 16:25:23,297 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-28 16:25:23,297 httpcore.http11 DEBUG send_request_body.complete
+2026-03-28 16:25:23,298 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-28 16:25:23,991 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sat, 28 Mar 2026 10:55:23 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-28 16:25:23,992 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-28 16:25:23,992 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-29 14:31:45,205 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:31:45,207 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-03-29 14:31:45,207 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:31:45,210 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-03-29 14:31:45,210 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:31:45,211 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-03-29 14:31:45,211 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:31:45,211 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-03-29 14:31:45,212 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:31:45,212 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-03-29 14:31:45,212 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:31:45,212 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:32:14,530 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:32:14,536 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-29 14:32:14,537 sqlalchemy.engine.Engine INFO [generated in 0.00123s] (1,)
+2026-03-29 14:32:14,548 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:32:14,549 sqlalchemy.engine.Engine INFO [generated in 0.00121s] (1,)
+2026-03-29 14:32:14,552 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:32:14,552 sqlalchemy.engine.Engine INFO [cached since 0.003805s ago] (1,)
+2026-03-29 14:32:14,553 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:32:14,560 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:32:14,561 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-29 14:32:14,562 sqlalchemy.engine.Engine INFO [cached since 0.02669s ago] (1,)
+2026-03-29 14:32:14,565 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:32:14,566 sqlalchemy.engine.Engine INFO [cached since 0.01811s ago] (1,)
+2026-03-29 14:32:14,569 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:32:14,569 sqlalchemy.engine.Engine INFO [cached since 0.02028s ago] (1,)
+2026-03-29 14:32:14,570 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:32:24,097 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:32:24,099 sqlalchemy.engine.Engine INFO SELECT file.id AS file_id, file.user_id AS file_user_id, file.md5 AS file_md5, file.file_name AS file_file_name, file.file_type AS file_file_type, file.file_path AS file_file_path, file.chunking_status AS file_chunking_status, file.embedding_status AS file_embedding_status 
+FROM file 
+WHERE file.user_id = ?
+2026-03-29 14:32:24,100 sqlalchemy.engine.Engine INFO [generated in 0.00061s] (1,)
+2026-03-29 14:32:24,102 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:32:24,106 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:32:24,107 sqlalchemy.engine.Engine INFO SELECT file.id AS file_id, file.user_id AS file_user_id, file.md5 AS file_md5, file.file_name AS file_file_name, file.file_type AS file_file_type, file.file_path AS file_file_path, file.chunking_status AS file_chunking_status, file.embedding_status AS file_embedding_status 
+FROM file 
+WHERE file.user_id = ?
+2026-03-29 14:32:24,107 sqlalchemy.engine.Engine INFO [cached since 0.007859s ago] (1,)
+2026-03-29 14:32:24,108 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:32:28,587 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:32:28,590 sqlalchemy.engine.Engine INFO INSERT INTO session (session_name, session_type, model_name, temperature, file_id, user_id, files) VALUES (?, ?, ?, ?, ?, ?, ?)
+2026-03-29 14:32:28,590 sqlalchemy.engine.Engine INFO [generated in 0.00084s] ("hi'", 'chat', 'lfm2.5-thinking:latest', 0.7, None, 1, '')
+2026-03-29 14:32:28,595 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:32:28,599 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:32:28,602 sqlalchemy.engine.Engine INFO SELECT session.id, session.session_name, session.session_type, session.model_name, session.temperature, session.file_id, session.user_id, session.files 
+FROM session 
+WHERE session.id = ?
+2026-03-29 14:32:28,602 sqlalchemy.engine.Engine INFO [generated in 0.00073s] (3,)
+2026-03-29 14:32:28,605 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:32:28,605 sqlalchemy.engine.Engine INFO [cached since 14.06s ago] (1,)
+2026-03-29 14:32:28,607 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:32:28,669 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:32:28,672 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 14:32:28,672 sqlalchemy.engine.Engine INFO [generated in 0.00065s] (3,)
+2026-03-29 14:32:28,675 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:32:28,725 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:32:28,727 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:32:28,727 sqlalchemy.engine.Engine INFO [generated in 0.00047s] ("hi'", 'user', 3)
+2026-03-29 14:32:28,730 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:32:28,736 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:32:28,738 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:32:28,739 sqlalchemy.engine.Engine INFO [generated in 0.00068s] (4,)
+2026-03-29 14:32:28,740 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 14:32:28,740 sqlalchemy.engine.Engine INFO [cached since 0.06812s ago] (3,)
+2026-03-29 14:32:28,741 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-29 14:32:28,742 sqlalchemy.engine.Engine INFO [generated in 0.00043s] (3, 1, 0)
+2026-03-29 14:32:28,744 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:32:28,807 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-29 14:32:28,809 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000022FB1643830>
+2026-03-29 14:32:28,809 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-29 14:32:28,810 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-29 14:32:28,810 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-29 14:32:28,810 httpcore.http11 DEBUG send_request_body.complete
+2026-03-29 14:32:28,810 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-29 14:32:31,851 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sun, 29 Mar 2026 09:02:31 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-29 14:32:31,852 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-29 14:32:31,852 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-29 14:32:36,551 httpcore.http11 DEBUG receive_response_body.complete
+2026-03-29 14:32:36,551 httpcore.http11 DEBUG response_closed.started
+2026-03-29 14:32:36,552 httpcore.http11 DEBUG response_closed.complete
+2026-03-29 14:32:36,557 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:32:36,557 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:32:36,558 sqlalchemy.engine.Engine INFO [cached since 7.831s ago] ('Hi! How can I assist you today? Let me know if you have any questions or need help with something specific. \U0001f60a', 'assistant', 3)
+2026-03-29 14:32:36,560 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:32:36,564 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:32:36,566 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:32:36,567 sqlalchemy.engine.Engine INFO [cached since 7.829s ago] (5,)
+2026-03-29 14:34:33,744 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:34:33,744 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:34:33,744 sqlalchemy.engine.Engine INFO [cached since 125s ago] ('hii\n', 'user', 3)
+2026-03-29 14:34:33,747 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:34:33,749 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:34:33,750 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:34:33,750 sqlalchemy.engine.Engine INFO [cached since 125s ago] (6,)
+2026-03-29 14:34:33,751 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 14:34:33,751 sqlalchemy.engine.Engine INFO [cached since 125.1s ago] (3,)
+2026-03-29 14:34:33,752 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-29 14:34:33,752 sqlalchemy.engine.Engine INFO [cached since 125s ago] (3, 1, 0)
+2026-03-29 14:34:33,754 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:34:33,807 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-29 14:34:33,811 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000022FB16F8C20>
+2026-03-29 14:34:33,812 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-29 14:34:33,814 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-29 14:34:33,814 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-29 14:34:33,815 httpcore.http11 DEBUG send_request_body.complete
+2026-03-29 14:34:33,815 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-29 14:34:34,031 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sun, 29 Mar 2026 09:04:34 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-29 14:34:34,031 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-29 14:34:34,031 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-29 14:34:37,314 httpcore.http11 DEBUG receive_response_body.complete
+2026-03-29 14:34:37,314 httpcore.http11 DEBUG response_closed.started
+2026-03-29 14:34:37,314 httpcore.http11 DEBUG response_closed.complete
+2026-03-29 14:34:37,319 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:34:37,320 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:34:37,320 sqlalchemy.engine.Engine INFO [cached since 128.6s ago] ('Hi! How can I assist you today? Feel free to ask any questions or let me know if you need help with anything specific. \U0001f60a', 'assistant', 3)
+2026-03-29 14:34:37,324 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:34:37,327 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:34:37,329 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:34:37,330 sqlalchemy.engine.Engine INFO [cached since 128.6s ago] (7,)
+2026-03-29 14:36:43,930 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:36:43,930 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-03-29 14:36:43,930 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:36:43,932 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-03-29 14:36:43,933 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:36:43,933 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-03-29 14:36:43,933 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:36:43,933 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-03-29 14:36:43,934 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:36:43,934 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-03-29 14:36:43,934 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:36:43,935 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:36:48,207 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:36:48,209 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:36:48,209 sqlalchemy.engine.Engine INFO [generated in 0.00033s] ('hi\n', 'user', 3)
+2026-03-29 14:36:48,212 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:36:48,215 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:36:48,217 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:36:48,218 sqlalchemy.engine.Engine INFO [generated in 0.00067s] (8,)
+2026-03-29 14:36:48,220 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 14:36:48,220 sqlalchemy.engine.Engine INFO [generated in 0.00033s] (3,)
+2026-03-29 14:36:48,221 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-29 14:36:48,223 sqlalchemy.engine.Engine INFO [generated in 0.00065s] (3, 1, 0)
+2026-03-29 14:36:48,225 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:36:48,307 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-29 14:36:48,309 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000012F02571670>
+2026-03-29 14:36:48,309 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-29 14:36:48,310 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-29 14:36:48,310 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-29 14:36:48,310 httpcore.http11 DEBUG send_request_body.complete
+2026-03-29 14:36:48,310 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-29 14:36:48,593 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sun, 29 Mar 2026 09:06:48 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-29 14:36:48,594 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-29 14:36:48,594 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-29 14:36:51,713 httpcore.http11 DEBUG receive_response_body.complete
+2026-03-29 14:36:51,713 httpcore.http11 DEBUG response_closed.started
+2026-03-29 14:36:51,714 httpcore.http11 DEBUG response_closed.complete
+2026-03-29 14:36:51,718 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:36:51,719 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:36:51,719 sqlalchemy.engine.Engine INFO [cached since 3.509s ago] ('Hello! How can I assist you today? Feel free to ask any questions or let me know if you need help with anything specific. \U0001f60a', 'assistant', 3)
+2026-03-29 14:36:51,721 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:36:51,725 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:36:51,725 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:36:51,726 sqlalchemy.engine.Engine INFO [cached since 3.509s ago] (9,)
+2026-03-29 14:39:58,307 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:39:58,307 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-03-29 14:39:58,308 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:39:58,309 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-03-29 14:39:58,309 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:39:58,309 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-03-29 14:39:58,309 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:39:58,310 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-03-29 14:39:58,310 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:39:58,310 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-03-29 14:39:58,310 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:39:58,311 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:40:04,924 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:04,925 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:40:04,926 sqlalchemy.engine.Engine INFO [generated in 0.00024s] ('hi\n', 'user', 3)
+2026-03-29 14:40:04,927 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:40:04,930 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:04,932 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:40:04,933 sqlalchemy.engine.Engine INFO [generated in 0.00039s] (10,)
+2026-03-29 14:40:04,935 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 14:40:04,935 sqlalchemy.engine.Engine INFO [generated in 0.00043s] (3,)
+2026-03-29 14:40:04,938 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-29 14:40:04,938 sqlalchemy.engine.Engine INFO [generated in 0.00057s] (3, 1, 0)
+2026-03-29 14:40:04,941 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:40:05,014 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-29 14:40:05,016 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000014985331940>
+2026-03-29 14:40:05,016 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-29 14:40:05,016 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-29 14:40:05,017 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-29 14:40:05,017 httpcore.http11 DEBUG send_request_body.complete
+2026-03-29 14:40:05,017 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-29 14:40:05,334 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sun, 29 Mar 2026 09:10:05 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-29 14:40:05,334 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-29 14:40:05,334 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-29 14:40:08,557 httpcore.http11 DEBUG receive_response_body.complete
+2026-03-29 14:40:08,558 httpcore.http11 DEBUG response_closed.started
+2026-03-29 14:40:08,559 httpcore.http11 DEBUG response_closed.complete
+2026-03-29 14:40:08,562 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:08,565 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:40:08,565 sqlalchemy.engine.Engine INFO [cached since 3.64s ago] ('Hello! How can I assist you today? Feel free to ask any questions or let me know if you need help with anything specific. \U0001f60a', 'assistant', 3)
+2026-03-29 14:40:08,568 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:40:08,573 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:08,574 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:40:08,575 sqlalchemy.engine.Engine INFO [cached since 3.643s ago] (11,)
+2026-03-29 14:40:11,882 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:11,884 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-29 14:40:11,886 sqlalchemy.engine.Engine INFO [generated in 0.00125s] (1,)
+2026-03-29 14:40:11,891 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:40:11,892 sqlalchemy.engine.Engine INFO [generated in 0.00109s] (1,)
+2026-03-29 14:40:11,893 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:40:11,894 sqlalchemy.engine.Engine INFO [cached since 0.003737s ago] (1,)
+2026-03-29 14:40:11,897 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:40:11,897 sqlalchemy.engine.Engine INFO [cached since 0.006929s ago] (1,)
+2026-03-29 14:40:11,899 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:40:11,910 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:11,911 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-29 14:40:11,911 sqlalchemy.engine.Engine INFO [cached since 0.02742s ago] (1,)
+2026-03-29 14:40:11,915 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:40:11,916 sqlalchemy.engine.Engine INFO [cached since 0.0254s ago] (1,)
+2026-03-29 14:40:11,920 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:40:11,920 sqlalchemy.engine.Engine INFO [cached since 0.02982s ago] (1,)
+2026-03-29 14:40:11,922 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:40:11,923 sqlalchemy.engine.Engine INFO [cached since 0.03216s ago] (1,)
+2026-03-29 14:40:11,925 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:40:13,989 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:13,991 sqlalchemy.engine.Engine INFO SELECT file.id AS file_id, file.user_id AS file_user_id, file.md5 AS file_md5, file.file_name AS file_file_name, file.file_type AS file_file_type, file.file_path AS file_file_path, file.chunking_status AS file_chunking_status, file.embedding_status AS file_embedding_status 
+FROM file 
+WHERE file.user_id = ?
+2026-03-29 14:40:13,991 sqlalchemy.engine.Engine INFO [generated in 0.00051s] (1,)
+2026-03-29 14:40:13,993 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:40:13,997 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:13,998 sqlalchemy.engine.Engine INFO SELECT file.id AS file_id, file.user_id AS file_user_id, file.md5 AS file_md5, file.file_name AS file_file_name, file.file_type AS file_file_type, file.file_path AS file_file_path, file.chunking_status AS file_chunking_status, file.embedding_status AS file_embedding_status 
+FROM file 
+WHERE file.user_id = ?
+2026-03-29 14:40:13,998 sqlalchemy.engine.Engine INFO [cached since 0.006901s ago] (1,)
+2026-03-29 14:40:14,000 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:40:19,472 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:19,472 sqlalchemy.engine.Engine INFO SELECT file.id AS file_id, file.user_id AS file_user_id, file.md5 AS file_md5, file.file_name AS file_file_name, file.file_type AS file_file_type, file.file_path AS file_file_path, file.chunking_status AS file_chunking_status, file.embedding_status AS file_embedding_status 
+FROM file 
+WHERE file.user_id = ?
+2026-03-29 14:40:19,473 sqlalchemy.engine.Engine INFO [cached since 5.482s ago] (1,)
+2026-03-29 14:40:19,474 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:40:19,478 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:19,479 sqlalchemy.engine.Engine INFO SELECT file.id AS file_id, file.user_id AS file_user_id, file.md5 AS file_md5, file.file_name AS file_file_name, file.file_type AS file_file_type, file.file_path AS file_file_path, file.chunking_status AS file_chunking_status, file.embedding_status AS file_embedding_status 
+FROM file 
+WHERE file.user_id = ?
+2026-03-29 14:40:19,480 sqlalchemy.engine.Engine INFO [cached since 5.489s ago] (1,)
+2026-03-29 14:40:19,481 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:40:25,118 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:25,119 sqlalchemy.engine.Engine INFO INSERT INTO session (session_name, session_type, model_name, temperature, file_id, user_id, files) VALUES (?, ?, ?, ?, ?, ?, ?)
+2026-03-29 14:40:25,119 sqlalchemy.engine.Engine INFO [generated in 0.00044s] ('hi', 'chat', 'lfm2.5-thinking:latest', 0.7, None, 1, '')
+2026-03-29 14:40:25,122 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:40:25,125 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:25,127 sqlalchemy.engine.Engine INFO SELECT session.id, session.session_name, session.session_type, session.model_name, session.temperature, session.file_id, session.user_id, session.files 
+FROM session 
+WHERE session.id = ?
+2026-03-29 14:40:25,128 sqlalchemy.engine.Engine INFO [generated in 0.00100s] (4,)
+2026-03-29 14:40:25,130 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:40:25,130 sqlalchemy.engine.Engine INFO [cached since 13.24s ago] (1,)
+2026-03-29 14:40:25,133 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:40:25,196 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:25,197 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 14:40:25,197 sqlalchemy.engine.Engine INFO [cached since 20.26s ago] (4,)
+2026-03-29 14:40:25,199 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:40:25,241 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:25,243 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:40:25,243 sqlalchemy.engine.Engine INFO [cached since 20.32s ago] ('hi', 'user', 4)
+2026-03-29 14:40:25,246 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:40:25,249 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:25,249 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:40:25,249 sqlalchemy.engine.Engine INFO [cached since 20.32s ago] (12,)
+2026-03-29 14:40:25,252 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 14:40:25,253 sqlalchemy.engine.Engine INFO [cached since 20.32s ago] (4,)
+2026-03-29 14:40:25,254 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-29 14:40:25,255 sqlalchemy.engine.Engine INFO [cached since 20.32s ago] (4, 1, 0)
+2026-03-29 14:40:25,256 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:40:25,312 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-29 14:40:25,313 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x00000149854121E0>
+2026-03-29 14:40:25,314 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-29 14:40:25,315 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-29 14:40:25,315 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-29 14:40:25,315 httpcore.http11 DEBUG send_request_body.complete
+2026-03-29 14:40:25,315 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-29 14:40:25,633 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sun, 29 Mar 2026 09:10:25 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-29 14:40:25,633 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-29 14:40:25,634 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-29 14:40:27,351 httpcore.http11 DEBUG receive_response_body.complete
+2026-03-29 14:40:27,351 httpcore.http11 DEBUG response_closed.started
+2026-03-29 14:40:27,351 httpcore.http11 DEBUG response_closed.complete
+2026-03-29 14:40:27,355 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:27,356 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:40:27,356 sqlalchemy.engine.Engine INFO [cached since 22.43s ago] ('Hello! How can I assist you today? Feel free to ask any questions or let me know if you need help with anything specific! \U0001f60a', 'assistant', 4)
+2026-03-29 14:40:27,359 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:40:27,363 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:40:27,364 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:40:27,364 sqlalchemy.engine.Engine INFO [cached since 22.43s ago] (13,)
+2026-03-29 14:42:41,946 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:42:41,947 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-03-29 14:42:41,947 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:42:41,948 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-03-29 14:42:41,948 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:42:41,949 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-03-29 14:42:41,949 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:42:41,949 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-03-29 14:42:41,949 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:42:41,949 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-03-29 14:42:41,950 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:42:41,951 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:43:50,679 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:43:50,680 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-03-29 14:43:50,680 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:43:50,681 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-03-29 14:43:50,681 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:43:50,682 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-03-29 14:43:50,682 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:43:50,682 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-03-29 14:43:50,683 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:43:50,683 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-03-29 14:43:50,683 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:43:50,683 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:44:08,207 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:44:08,211 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:44:08,211 sqlalchemy.engine.Engine INFO [generated in 0.00069s] ('hi\n', 'user', 4)
+2026-03-29 14:44:08,214 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:44:08,219 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:44:08,223 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:44:08,224 sqlalchemy.engine.Engine INFO [generated in 0.00085s] (14,)
+2026-03-29 14:44:08,226 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 14:44:08,226 sqlalchemy.engine.Engine INFO [generated in 0.00038s] (4,)
+2026-03-29 14:44:08,231 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-29 14:44:08,232 sqlalchemy.engine.Engine INFO [generated in 0.00087s] (4, 1, 0)
+2026-03-29 14:44:08,233 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:44:08,297 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-29 14:44:08,299 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000022DA8A25430>
+2026-03-29 14:44:08,299 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-29 14:44:08,299 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-29 14:44:08,300 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-29 14:44:08,301 httpcore.http11 DEBUG send_request_body.complete
+2026-03-29 14:44:08,301 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-29 14:44:08,620 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sun, 29 Mar 2026 09:14:08 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-29 14:44:08,620 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-29 14:44:08,621 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-29 14:44:10,289 httpcore.http11 DEBUG receive_response_body.complete
+2026-03-29 14:44:10,290 httpcore.http11 DEBUG response_closed.started
+2026-03-29 14:44:10,290 httpcore.http11 DEBUG response_closed.complete
+2026-03-29 14:44:10,294 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:44:10,296 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:44:10,296 sqlalchemy.engine.Engine INFO [cached since 2.086s ago] ('Hello! How can I assist you today? Feel free to ask me anything or let me know if you need help with something specific! \U0001f60a', 'assistant', 4)
+2026-03-29 14:44:10,298 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:44:10,306 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:44:10,307 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:44:10,308 sqlalchemy.engine.Engine INFO [cached since 2.085s ago] (15,)
+2026-03-29 14:54:26,556 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:54:26,556 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:54:26,557 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 14:54:26,558 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-29 14:54:26,558 sqlalchemy.engine.Engine INFO [cached since 618.3s ago] (4,)
+2026-03-29 14:54:26,559 sqlalchemy.engine.Engine INFO [generated in 0.00063s] (1,)
+2026-03-29 14:54:26,564 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:54:26,565 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+2026-03-29 14:54:26,567 sqlalchemy.engine.Engine INFO [generated in 0.00178s] (1,)
+2026-03-29 14:54:26,567 sqlalchemy.engine.Engine INFO [generated in 0.00079s] (4,)
+2026-03-29 14:54:26,568 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:54:26,569 sqlalchemy.engine.Engine INFO [cached since 0.004941s ago] (1,)
+2026-03-29 14:54:26,571 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:54:26,571 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:54:26,571 sqlalchemy.engine.Engine INFO [cached since 0.00699s ago] (1,)
+2026-03-29 14:54:26,573 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:54:26,575 sqlalchemy.engine.Engine INFO [cached since 0.01016s ago] (1,)
+2026-03-29 14:54:26,577 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:54:37,246 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:54:37,246 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 14:54:37,247 sqlalchemy.engine.Engine INFO [cached since 629s ago] (4,)
+2026-03-29 14:54:37,248 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+2026-03-29 14:54:37,249 sqlalchemy.engine.Engine INFO [cached since 10.68s ago] (4,)
+2026-03-29 14:54:37,251 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:54:37,256 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:54:37,257 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-29 14:54:37,257 sqlalchemy.engine.Engine INFO [cached since 10.7s ago] (1,)
+2026-03-29 14:54:37,259 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:54:37,259 sqlalchemy.engine.Engine INFO [cached since 10.7s ago] (1,)
+2026-03-29 14:54:37,262 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:54:37,262 sqlalchemy.engine.Engine INFO [cached since 10.7s ago] (1,)
+2026-03-29 14:54:37,265 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:54:37,265 sqlalchemy.engine.Engine INFO [cached since 10.7s ago] (1,)
+2026-03-29 14:54:37,267 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:54:37,267 sqlalchemy.engine.Engine INFO [cached since 10.7s ago] (1,)
+2026-03-29 14:54:37,268 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:54:52,445 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:54:52,448 sqlalchemy.engine.Engine INFO INSERT INTO session (session_name, session_type, model_name, temperature, file_id, user_id, files) VALUES (?, ?, ?, ?, ?, ?, ?)
+2026-03-29 14:54:52,449 sqlalchemy.engine.Engine INFO [generated in 0.00218s] ('\nhi', 'chat', 'lfm2.5-thinking:latest', 0.7, None, 1, '')
+2026-03-29 14:54:52,452 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:54:52,459 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:54:52,460 sqlalchemy.engine.Engine INFO SELECT session.id, session.session_name, session.session_type, session.model_name, session.temperature, session.file_id, session.user_id, session.files 
+FROM session 
+WHERE session.id = ?
+2026-03-29 14:54:52,461 sqlalchemy.engine.Engine INFO [generated in 0.00102s] (5,)
+2026-03-29 14:54:52,464 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:54:52,465 sqlalchemy.engine.Engine INFO [cached since 25.9s ago] (1,)
+2026-03-29 14:54:52,466 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:54:52,516 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:54:52,516 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 14:54:52,517 sqlalchemy.engine.Engine INFO [cached since 644.3s ago] (5,)
+2026-03-29 14:54:52,519 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:54:52,586 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:54:52,587 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:54:52,587 sqlalchemy.engine.Engine INFO [cached since 644.4s ago] ('\nhi', 'user', 5)
+2026-03-29 14:54:52,589 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:54:52,592 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:54:52,592 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:54:52,592 sqlalchemy.engine.Engine INFO [cached since 644.4s ago] (16,)
+2026-03-29 14:54:52,594 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 14:54:52,596 sqlalchemy.engine.Engine INFO [cached since 644.4s ago] (5,)
+2026-03-29 14:54:52,598 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-29 14:54:52,598 sqlalchemy.engine.Engine INFO [cached since 644.4s ago] (5, 1, 0)
+2026-03-29 14:54:52,601 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:54:52,657 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-29 14:54:52,658 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000022DA8AA1FD0>
+2026-03-29 14:54:52,658 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-29 14:54:52,659 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-29 14:54:52,659 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-29 14:54:52,659 httpcore.http11 DEBUG send_request_body.complete
+2026-03-29 14:54:52,660 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-29 14:54:54,676 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sun, 29 Mar 2026 09:24:54 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-29 14:54:54,677 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-29 14:54:54,677 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-29 14:54:56,114 httpcore.http11 DEBUG receive_response_body.complete
+2026-03-29 14:54:56,115 httpcore.http11 DEBUG response_closed.started
+2026-03-29 14:54:56,115 httpcore.http11 DEBUG response_closed.complete
+2026-03-29 14:54:56,120 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:54:56,120 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:54:56,121 sqlalchemy.engine.Engine INFO [cached since 647.9s ago] ('Hello! How can I assist you today? Feel free to ask questions, share ideas, or let me know if you need help with anything specific. \U0001f60a', 'assistant', 5)
+2026-03-29 14:54:56,123 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:54:56,127 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:54:56,128 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:54:56,129 sqlalchemy.engine.Engine INFO [cached since 647.9s ago] (17,)
+2026-03-29 14:58:00,866 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:58:00,866 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("user")
+2026-03-29 14:58:00,866 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:58:00,867 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("session")
+2026-03-29 14:58:00,867 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:58:00,868 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("chat_history")
+2026-03-29 14:58:00,868 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:58:00,868 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("file")
+2026-03-29 14:58:00,868 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:58:00,869 sqlalchemy.engine.Engine INFO PRAGMA main.table_info("citation")
+2026-03-29 14:58:00,869 sqlalchemy.engine.Engine INFO [raw sql] ()
+2026-03-29 14:58:00,869 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:58:35,583 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:58:35,587 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 14:58:35,587 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:58:35,587 sqlalchemy.engine.Engine INFO [generated in 0.00045s] (5,)
+2026-03-29 14:58:35,588 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-29 14:58:35,588 sqlalchemy.engine.Engine INFO [generated in 0.00035s] (1,)
+2026-03-29 14:58:35,592 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+2026-03-29 14:58:35,592 sqlalchemy.engine.Engine INFO [generated in 0.00052s] (5,)
+2026-03-29 14:58:35,594 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:58:35,594 sqlalchemy.engine.Engine INFO [generated in 0.00051s] (1,)
+2026-03-29 14:58:35,596 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:58:35,597 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:58:35,597 sqlalchemy.engine.Engine INFO [cached since 0.004115s ago] (1,)
+2026-03-29 14:58:35,599 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:58:35,600 sqlalchemy.engine.Engine INFO [cached since 0.006727s ago] (1,)
+2026-03-29 14:58:35,602 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:58:35,602 sqlalchemy.engine.Engine INFO [cached since 0.008626s ago] (1,)
+2026-03-29 14:58:35,603 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:58:35,603 sqlalchemy.engine.Engine INFO [cached since 0.01055s ago] (1,)
+2026-03-29 14:58:35,606 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:58:48,496 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:58:48,498 sqlalchemy.engine.Engine INFO INSERT INTO session (session_name, session_type, model_name, temperature, file_id, user_id, files) VALUES (?, ?, ?, ?, ?, ?, ?)
+2026-03-29 14:58:48,498 sqlalchemy.engine.Engine INFO [generated in 0.00044s] ('\nhi', 'chat', 'lfm2.5-thinking:latest', 0.7, None, 1, '')
+2026-03-29 14:58:48,500 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:58:48,503 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:58:48,505 sqlalchemy.engine.Engine INFO SELECT session.id, session.session_name, session.session_type, session.model_name, session.temperature, session.file_id, session.user_id, session.files 
+FROM session 
+WHERE session.id = ?
+2026-03-29 14:58:48,506 sqlalchemy.engine.Engine INFO [generated in 0.00162s] (6,)
+2026-03-29 14:58:48,510 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 14:58:48,510 sqlalchemy.engine.Engine INFO [cached since 12.92s ago] (1,)
+2026-03-29 14:58:48,512 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:58:48,563 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:58:48,564 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 14:58:48,564 sqlalchemy.engine.Engine INFO [cached since 12.98s ago] (6,)
+2026-03-29 14:58:48,565 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:58:48,626 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:58:48,627 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:58:48,627 sqlalchemy.engine.Engine INFO [generated in 0.00039s] ('\nhi', 'user', 6)
+2026-03-29 14:58:48,629 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:58:48,634 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:58:48,635 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:58:48,635 sqlalchemy.engine.Engine INFO [generated in 0.00058s] (18,)
+2026-03-29 14:58:48,637 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 14:58:48,638 sqlalchemy.engine.Engine INFO [cached since 13.05s ago] (6,)
+2026-03-29 14:58:48,642 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-29 14:58:48,642 sqlalchemy.engine.Engine INFO [generated in 0.00067s] (6, 1, 0)
+2026-03-29 14:58:48,644 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 14:58:48,696 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-29 14:58:48,697 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000017267F00470>
+2026-03-29 14:58:48,698 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-29 14:58:48,698 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-29 14:58:48,698 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-29 14:58:48,698 httpcore.http11 DEBUG send_request_body.complete
+2026-03-29 14:58:48,698 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-29 14:58:48,998 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sun, 29 Mar 2026 09:28:48 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-29 14:58:48,998 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-29 14:58:48,999 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-29 14:58:50,544 httpcore.http11 DEBUG receive_response_body.complete
+2026-03-29 14:58:50,544 httpcore.http11 DEBUG response_closed.started
+2026-03-29 14:58:50,544 httpcore.http11 DEBUG response_closed.complete
+2026-03-29 14:58:50,547 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:58:50,549 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 14:58:50,549 sqlalchemy.engine.Engine INFO [cached since 1.922s ago] ('Hello! How can I assist you today? Feel free to ask questions, share ideas, or let me know if you need help with anything specific. \U0001f60a', 'assistant', 6)
+2026-03-29 14:58:50,551 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 14:58:50,555 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 14:58:50,555 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 14:58:50,555 sqlalchemy.engine.Engine INFO [cached since 1.921s ago] (19,)
+2026-03-29 15:01:14,568 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:01:14,569 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-29 15:01:14,569 sqlalchemy.engine.Engine INFO [cached since 159s ago] (1,)
+2026-03-29 15:01:14,572 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:01:14,572 sqlalchemy.engine.Engine INFO [cached since 159s ago] (1,)
+2026-03-29 15:01:14,573 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:01:14,573 sqlalchemy.engine.Engine INFO [cached since 159s ago] (1,)
+2026-03-29 15:01:14,575 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:01:14,575 sqlalchemy.engine.Engine INFO [cached since 159s ago] (1,)
+2026-03-29 15:01:14,577 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:01:14,577 sqlalchemy.engine.Engine INFO [cached since 159s ago] (1,)
+2026-03-29 15:01:14,577 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:01:14,577 sqlalchemy.engine.Engine INFO [cached since 159s ago] (1,)
+2026-03-29 15:01:14,579 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:01:14,579 sqlalchemy.engine.Engine INFO [cached since 159s ago] (1,)
+2026-03-29 15:01:14,580 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:01:14,585 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:01:14,586 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-29 15:01:14,587 sqlalchemy.engine.Engine INFO [cached since 159s ago] (1,)
+2026-03-29 15:01:14,589 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:01:14,589 sqlalchemy.engine.Engine INFO [cached since 159s ago] (1,)
+2026-03-29 15:01:14,590 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:01:14,590 sqlalchemy.engine.Engine INFO [cached since 159s ago] (1,)
+2026-03-29 15:01:14,592 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:01:14,592 sqlalchemy.engine.Engine INFO [cached since 159s ago] (1,)
+2026-03-29 15:01:14,595 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:01:14,596 sqlalchemy.engine.Engine INFO [cached since 159s ago] (1,)
+2026-03-29 15:01:14,599 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:01:14,599 sqlalchemy.engine.Engine INFO [cached since 159s ago] (1,)
+2026-03-29 15:01:14,602 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:01:14,604 sqlalchemy.engine.Engine INFO [cached since 159s ago] (1,)
+2026-03-29 15:01:14,607 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:01:26,551 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:01:26,552 sqlalchemy.engine.Engine INFO INSERT INTO session (session_name, session_type, model_name, temperature, file_id, user_id, files) VALUES (?, ?, ?, ?, ?, ?, ?)
+2026-03-29 15:01:26,552 sqlalchemy.engine.Engine INFO [cached since 158.1s ago] ('hi', 'chat', 'qwen3.5:2b', 0.7, None, 1, '')
+2026-03-29 15:01:26,553 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:01:26,556 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:01:26,557 sqlalchemy.engine.Engine INFO SELECT session.id, session.session_name, session.session_type, session.model_name, session.temperature, session.file_id, session.user_id, session.files 
+FROM session 
+WHERE session.id = ?
+2026-03-29 15:01:26,557 sqlalchemy.engine.Engine INFO [cached since 158.1s ago] (7,)
+2026-03-29 15:01:26,558 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:01:26,558 sqlalchemy.engine.Engine INFO [cached since 171s ago] (1,)
+2026-03-29 15:01:26,561 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:01:26,602 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:01:26,602 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 15:01:26,602 sqlalchemy.engine.Engine INFO [cached since 171s ago] (7,)
+2026-03-29 15:01:26,605 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:01:26,673 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:01:26,673 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 15:01:26,673 sqlalchemy.engine.Engine INFO [cached since 158s ago] ('hi', 'user', 7)
+2026-03-29 15:01:26,676 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:01:26,679 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:01:26,680 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 15:01:26,680 sqlalchemy.engine.Engine INFO [cached since 158s ago] (20,)
+2026-03-29 15:01:26,681 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 15:01:26,682 sqlalchemy.engine.Engine INFO [cached since 171.1s ago] (7,)
+2026-03-29 15:01:26,684 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-29 15:01:26,684 sqlalchemy.engine.Engine INFO [cached since 158s ago] (7, 1, 0)
+2026-03-29 15:01:26,686 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:01:26,734 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-29 15:01:26,737 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000017267ED0CE0>
+2026-03-29 15:01:26,737 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-29 15:01:26,738 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-29 15:01:26,738 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-29 15:01:26,739 httpcore.http11 DEBUG send_request_body.complete
+2026-03-29 15:01:26,739 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-29 15:01:32,059 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sun, 29 Mar 2026 09:31:32 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-29 15:01:32,060 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-29 15:01:32,060 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-29 15:01:48,923 httpcore.http11 DEBUG receive_response_body.complete
+2026-03-29 15:01:48,923 httpcore.http11 DEBUG response_closed.started
+2026-03-29 15:01:48,923 httpcore.http11 DEBUG response_closed.complete
+2026-03-29 15:01:48,929 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:01:48,930 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 15:01:48,930 sqlalchemy.engine.Engine INFO [cached since 180.3s ago] ("Hi there! \U0001f44b How's it going? Is there anything I can help you with today?", 'assistant', 7)
+2026-03-29 15:01:48,932 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:01:48,934 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:01:48,935 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 15:01:48,935 sqlalchemy.engine.Engine INFO [cached since 180.3s ago] (21,)
+2026-03-29 15:01:54,996 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:01:54,998 sqlalchemy.engine.Engine INFO SELECT file.id AS file_id, file.user_id AS file_user_id, file.md5 AS file_md5, file.file_name AS file_file_name, file.file_type AS file_file_type, file.file_path AS file_file_path, file.chunking_status AS file_chunking_status, file.embedding_status AS file_embedding_status 
+FROM file 
+WHERE file.user_id = ?
+2026-03-29 15:01:54,998 sqlalchemy.engine.Engine INFO [generated in 0.00049s] (1,)
+2026-03-29 15:01:55,000 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:01:55,006 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:01:55,006 sqlalchemy.engine.Engine INFO SELECT file.id AS file_id, file.user_id AS file_user_id, file.md5 AS file_md5, file.file_name AS file_file_name, file.file_type AS file_file_type, file.file_path AS file_file_path, file.chunking_status AS file_chunking_status, file.embedding_status AS file_embedding_status 
+FROM file 
+WHERE file.user_id = ?
+2026-03-29 15:01:55,007 sqlalchemy.engine.Engine INFO [cached since 0.00909s ago] (1,)
+2026-03-29 15:01:55,009 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:02:04,995 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:04,995 sqlalchemy.engine.Engine INFO INSERT INTO session (session_name, session_type, model_name, temperature, file_id, user_id, files) VALUES (?, ?, ?, ?, ?, ?, ?)
+2026-03-29 15:02:04,996 sqlalchemy.engine.Engine INFO [cached since 196.5s ago] ('\nhi', 'chat', 'qwen3.5:2b', 0.7, None, 1, '')
+2026-03-29 15:02:04,998 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:02:05,000 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:05,000 sqlalchemy.engine.Engine INFO SELECT session.id, session.session_name, session.session_type, session.model_name, session.temperature, session.file_id, session.user_id, session.files 
+FROM session 
+WHERE session.id = ?
+2026-03-29 15:02:05,001 sqlalchemy.engine.Engine INFO [cached since 196.5s ago] (8,)
+2026-03-29 15:02:05,002 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:02:05,003 sqlalchemy.engine.Engine INFO [cached since 209.4s ago] (1,)
+2026-03-29 15:02:05,005 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:02:05,055 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:05,057 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 15:02:05,058 sqlalchemy.engine.Engine INFO [cached since 209.5s ago] (8,)
+2026-03-29 15:02:05,059 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:02:05,116 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:05,117 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 15:02:05,117 sqlalchemy.engine.Engine INFO [cached since 196.5s ago] ('\nhi', 'user', 8)
+2026-03-29 15:02:05,119 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:02:05,121 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:05,122 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 15:02:05,122 sqlalchemy.engine.Engine INFO [cached since 196.5s ago] (22,)
+2026-03-29 15:02:05,123 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 15:02:05,124 sqlalchemy.engine.Engine INFO [cached since 209.5s ago] (8,)
+2026-03-29 15:02:05,125 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-29 15:02:05,125 sqlalchemy.engine.Engine INFO [cached since 196.5s ago] (8, 1, 0)
+2026-03-29 15:02:05,125 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:02:05,171 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-29 15:02:05,172 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000017267F02F60>
+2026-03-29 15:02:05,173 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-29 15:02:05,173 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-29 15:02:05,173 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-29 15:02:05,173 httpcore.http11 DEBUG send_request_body.complete
+2026-03-29 15:02:05,173 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-29 15:02:05,737 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sun, 29 Mar 2026 09:32:05 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-29 15:02:05,738 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-29 15:02:05,738 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-29 15:02:12,063 httpcore.http11 DEBUG receive_response_body.complete
+2026-03-29 15:02:12,063 httpcore.http11 DEBUG response_closed.started
+2026-03-29 15:02:12,063 httpcore.http11 DEBUG response_closed.complete
+2026-03-29 15:02:12,066 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:12,067 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 15:02:12,067 sqlalchemy.engine.Engine INFO [cached since 203.4s ago] ('Hi there! \U0001f44b How can I help you today?', 'assistant', 8)
+2026-03-29 15:02:12,071 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:02:12,076 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:12,077 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 15:02:12,086 sqlalchemy.engine.Engine INFO [cached since 203.5s ago] (23,)
+2026-03-29 15:02:16,134 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:16,136 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 15:02:16,136 sqlalchemy.engine.Engine INFO [cached since 207.5s ago] ('\nhi', 'user', 8)
+2026-03-29 15:02:16,137 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:02:16,138 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:16,139 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 15:02:16,139 sqlalchemy.engine.Engine INFO [cached since 207.5s ago] (24,)
+2026-03-29 15:02:16,140 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 15:02:16,140 sqlalchemy.engine.Engine INFO [cached since 220.6s ago] (8,)
+2026-03-29 15:02:16,142 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-29 15:02:16,142 sqlalchemy.engine.Engine INFO [cached since 207.5s ago] (8, 1, 0)
+2026-03-29 15:02:16,143 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:02:16,197 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-29 15:02:16,198 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000017267F40290>
+2026-03-29 15:02:16,199 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-29 15:02:16,199 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-29 15:02:16,199 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-29 15:02:16,199 httpcore.http11 DEBUG send_request_body.complete
+2026-03-29 15:02:16,199 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-29 15:02:16,506 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sun, 29 Mar 2026 09:32:16 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-29 15:02:16,506 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-29 15:02:16,506 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-29 15:02:19,092 httpcore.http11 DEBUG receive_response_body.complete
+2026-03-29 15:02:19,092 httpcore.http11 DEBUG response_closed.started
+2026-03-29 15:02:19,092 httpcore.http11 DEBUG response_closed.complete
+2026-03-29 15:02:19,095 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:19,095 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 15:02:19,095 sqlalchemy.engine.Engine INFO [cached since 210.5s ago] ("Hi there! \U0001f44b How's your day going? Is there anything specific I can help you with? \U0001f60a", 'assistant', 8)
+2026-03-29 15:02:19,099 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:02:19,101 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:19,102 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 15:02:19,102 sqlalchemy.engine.Engine INFO [cached since 210.5s ago] (25,)
+2026-03-29 15:02:34,280 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:34,280 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 15:02:34,281 sqlalchemy.engine.Engine INFO [cached since 225.7s ago] ('\ncan you give me two plus 1000', 'user', 8)
+2026-03-29 15:02:34,284 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:02:34,288 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:34,288 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 15:02:34,288 sqlalchemy.engine.Engine INFO [cached since 225.7s ago] (26,)
+2026-03-29 15:02:34,290 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 15:02:34,290 sqlalchemy.engine.Engine INFO [cached since 238.7s ago] (8,)
+2026-03-29 15:02:34,292 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-29 15:02:34,292 sqlalchemy.engine.Engine INFO [cached since 225.7s ago] (8, 1, 0)
+2026-03-29 15:02:34,293 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:02:34,371 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-29 15:02:34,372 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000017267F417C0>
+2026-03-29 15:02:34,373 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-29 15:02:34,373 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-29 15:02:34,373 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-29 15:02:34,374 httpcore.http11 DEBUG send_request_body.complete
+2026-03-29 15:02:34,374 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-29 15:02:34,932 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sun, 29 Mar 2026 09:32:34 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-29 15:02:34,932 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-29 15:02:34,932 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-29 15:02:37,201 httpcore.http11 DEBUG receive_response_body.complete
+2026-03-29 15:02:37,202 httpcore.http11 DEBUG response_closed.started
+2026-03-29 15:02:37,202 httpcore.http11 DEBUG response_closed.complete
+2026-03-29 15:02:37,205 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:37,206 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 15:02:37,206 sqlalchemy.engine.Engine INFO [cached since 228.6s ago] ("Hello! \U0001f44b How's your day going? Is there something specific I can help you with today? \U0001f60a", 'assistant', 8)
+2026-03-29 15:02:37,210 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:02:37,213 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:37,213 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 15:02:37,214 sqlalchemy.engine.Engine INFO [cached since 228.6s ago] (27,)
+2026-03-29 15:02:55,864 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:55,864 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 15:02:55,864 sqlalchemy.engine.Engine INFO [cached since 247.2s ago] ('my name is rahul \n', 'user', 8)
+2026-03-29 15:02:55,867 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:02:55,871 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:02:55,872 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 15:02:55,872 sqlalchemy.engine.Engine INFO [cached since 247.2s ago] (28,)
+2026-03-29 15:02:55,873 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 15:02:55,875 sqlalchemy.engine.Engine INFO [cached since 260.3s ago] (8,)
+2026-03-29 15:02:55,875 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-29 15:02:55,877 sqlalchemy.engine.Engine INFO [cached since 247.2s ago] (8, 1, 0)
+2026-03-29 15:02:55,877 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:02:55,921 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-29 15:02:55,922 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000017267F42C00>
+2026-03-29 15:02:55,923 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-29 15:02:55,923 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-29 15:02:55,923 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-29 15:02:55,923 httpcore.http11 DEBUG send_request_body.complete
+2026-03-29 15:02:55,923 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-29 15:02:56,344 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sun, 29 Mar 2026 09:32:56 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-29 15:02:56,344 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-29 15:02:56,344 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-29 15:03:00,293 httpcore.http11 DEBUG receive_response_body.complete
+2026-03-29 15:03:00,294 httpcore.http11 DEBUG response_closed.started
+2026-03-29 15:03:00,294 httpcore.http11 DEBUG response_closed.complete
+2026-03-29 15:03:00,297 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:03:00,297 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 15:03:00,298 sqlalchemy.engine.Engine INFO [cached since 251.7s ago] ('Hi there! How can I help you today? Feel free to ask any questions or let me know if you need assistance with anything! \U0001f60a', 'assistant', 8)
+2026-03-29 15:03:00,300 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:03:00,303 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:03:00,304 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 15:03:00,305 sqlalchemy.engine.Engine INFO [cached since 251.7s ago] (29,)
+2026-03-29 15:03:16,587 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:03:16,587 sqlalchemy.engine.Engine INFO INSERT INTO session (session_name, session_type, model_name, temperature, file_id, user_id, files) VALUES (?, ?, ?, ?, ?, ?, ?)
+2026-03-29 15:03:16,587 sqlalchemy.engine.Engine INFO [cached since 268.1s ago] ('write a api in js\n', 'chat', 'qwen3.5:2b', 0.7, None, 1, '')
+2026-03-29 15:03:16,592 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:03:16,595 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:03:16,595 sqlalchemy.engine.Engine INFO SELECT session.id, session.session_name, session.session_type, session.model_name, session.temperature, session.file_id, session.user_id, session.files 
+FROM session 
+WHERE session.id = ?
+2026-03-29 15:03:16,595 sqlalchemy.engine.Engine INFO [cached since 268.1s ago] (9,)
+2026-03-29 15:03:16,596 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:03:16,596 sqlalchemy.engine.Engine INFO [cached since 281s ago] (1,)
+2026-03-29 15:03:16,599 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:03:16,642 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:03:16,643 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 15:03:16,643 sqlalchemy.engine.Engine INFO [cached since 281.1s ago] (9,)
+2026-03-29 15:03:16,646 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:03:16,707 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:03:16,707 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 15:03:16,707 sqlalchemy.engine.Engine INFO [cached since 268.1s ago] ('write a api in js\n', 'user', 9)
+2026-03-29 15:03:16,711 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:03:16,714 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:03:16,714 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 15:03:16,714 sqlalchemy.engine.Engine INFO [cached since 268.1s ago] (30,)
+2026-03-29 15:03:16,715 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 15:03:16,715 sqlalchemy.engine.Engine INFO [cached since 281.1s ago] (9,)
+2026-03-29 15:03:16,717 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+ LIMIT ? OFFSET ?
+2026-03-29 15:03:16,717 sqlalchemy.engine.Engine INFO [cached since 268.1s ago] (9, 1, 0)
+2026-03-29 15:03:16,719 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:03:16,772 httpcore.connection DEBUG connect_tcp.started host='127.0.0.1' port=11434 local_address=None timeout=None socket_options=None
+2026-03-29 15:03:16,774 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000017267F43F20>
+2026-03-29 15:03:16,774 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+2026-03-29 15:03:16,776 httpcore.http11 DEBUG send_request_headers.complete
+2026-03-29 15:03:16,776 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+2026-03-29 15:03:16,776 httpcore.http11 DEBUG send_request_body.complete
+2026-03-29 15:03:16,776 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+2026-03-29 15:03:17,314 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/x-ndjson'), (b'Date', b'Sun, 29 Mar 2026 09:33:17 GMT'), (b'Transfer-Encoding', b'chunked')])
+2026-03-29 15:03:17,314 httpx INFO HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-29 15:03:17,315 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+2026-03-29 15:03:58,022 httpcore.http11 DEBUG receive_response_body.complete
+2026-03-29 15:03:58,022 httpcore.http11 DEBUG response_closed.started
+2026-03-29 15:03:58,023 httpcore.http11 DEBUG response_closed.complete
+2026-03-29 15:03:58,029 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:03:58,030 sqlalchemy.engine.Engine INFO INSERT INTO chat_history (message, message_type, session_id) VALUES (?, ?, ?)
+2026-03-29 15:03:58,030 sqlalchemy.engine.Engine INFO [cached since 309.4s ago] ('If you want to build the **backend logic** (the server) that accepts data, I will provide a complete Node.js and Express example. This is the standar ... (4145 characters truncated) ... ct (like `data: {...}`).\n3.  **`response.ok`**: This tells the browser that the HTTP request was successful, not just that the server returned data.', 'assistant', 9)
+2026-03-29 15:03:58,032 sqlalchemy.engine.Engine INFO COMMIT
+2026-03-29 15:03:58,034 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:03:58,036 sqlalchemy.engine.Engine INFO SELECT chat_history.id, chat_history.message, chat_history.message_type, chat_history.session_id 
+FROM chat_history 
+WHERE chat_history.id = ?
+2026-03-29 15:03:58,036 sqlalchemy.engine.Engine INFO [cached since 309.4s ago] (31,)
+2026-03-29 15:40:11,392 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:40:11,393 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-29 15:40:11,394 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,396 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,397 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,399 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,399 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,401 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,402 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,403 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,403 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,404 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,404 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,405 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,407 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,409 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,409 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,412 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,413 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,416 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,416 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,418 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:40:11,422 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:40:11,425 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.user_id = ?
+2026-03-29 15:40:11,425 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,427 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,427 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,428 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,429 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,430 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,430 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,432 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,434 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,435 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,436 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,437 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,438 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,439 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,439 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,440 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,441 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,441 sqlalchemy.engine.Engine INFO SELECT user.id AS user_id, user.name AS user_name, user.email AS user_email 
+FROM user 
+WHERE user.id = ?
+2026-03-29 15:40:11,442 sqlalchemy.engine.Engine INFO [cached since 2496s ago] (1,)
+2026-03-29 15:40:11,443 sqlalchemy.engine.Engine INFO ROLLBACK
+2026-03-29 15:40:12,395 sqlalchemy.engine.Engine INFO BEGIN (implicit)
+2026-03-29 15:40:12,396 sqlalchemy.engine.Engine INFO SELECT chat_history.id AS chat_history_id, chat_history.message AS chat_history_message, chat_history.message_type AS chat_history_message_type, chat_history.session_id AS chat_history_session_id 
+FROM chat_history 
+WHERE chat_history.session_id = ?
+2026-03-29 15:40:12,397 sqlalchemy.engine.Engine INFO [cached since 2497s ago] (9,)
+2026-03-29 15:40:12,398 sqlalchemy.engine.Engine INFO SELECT session.id AS session_id, session.session_name AS session_session_name, session.session_type AS session_session_type, session.model_name AS session_model_name, session.temperature AS session_temperature, session.file_id AS session_file_id, session.user_id AS session_user_id, session.files AS session_files 
+FROM session 
+WHERE session.id = ?
+2026-03-29 15:40:12,399 sqlalchemy.engine.Engine INFO [cached since 2497s ago] (9,)
+2026-03-29 15:40:12,401 sqlalchemy.engine.Engine INFO ROLLBACK
